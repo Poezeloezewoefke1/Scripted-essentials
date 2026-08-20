@@ -99,8 +99,10 @@ public final class FeatureMenu extends Menu {
                     ? (categoryIndex - 1 + tabs.size()) % tabs.size()
                     : (categoryIndex + 1) % tabs.size();
             page = 0;
-            // The title carries the category name, so the window has to be rebuilt.
-            open();
+            // The title carries the category name, so the window has to be rebuilt rather than
+            // refreshed. Opening an inventory from inside a click event desyncs the client's
+            // in-progress transaction, so it waits a tick.
+            plugin.getServer().getScheduler().runTask(plugin, this::open);
         });
 
         int enabled = plugin.features().enabledCount();

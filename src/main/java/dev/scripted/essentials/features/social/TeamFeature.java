@@ -94,7 +94,7 @@ public final class TeamFeature extends Feature {
             @EventHandler
             public void onJoin(PlayerJoinEvent event) {
                 if (isEnabled()) {
-                    syncScoreboard();
+                    syncPlayer(event.getPlayer());
                 }
             }
 
@@ -175,6 +175,8 @@ public final class TeamFeature extends Feature {
         List<String> members = membersOf(name);
         members.add(target.getUniqueId().toString());
         store.get().set("teams." + name + ".members", members);
+        // Remembering the name here is what keeps the scoreboard sync off the profile lookup path.
+        store.get().set("teams." + name + ".member-names." + target.getUniqueId(), target.getName());
         store.save();
         syncScoreboard();
 
@@ -205,13 +207,9 @@ public final class TeamFeature extends Feature {
         String name = requireTeam(args, 1);
         List<String> memberNames = new ArrayList<>();
         for (String raw : membersOf(name)) {
-            try {
-                String memberName = Bukkit.getOfflinePlayer(UUID.fromString(raw)).getName();
-                memberNames.add(memberName == null ? raw : memberName);
-            } catch (IllegalArgumentException ignored) {
-                // A hand-edited members list; show the raw value rather than dropping it.
-                memberNames.add(raw);
-            }
+            String memberName = nameOf(name, raw);
+            // Show the raw id for a hand-edited entry rather than dropping the member silently.
+            memberNames.add(memberName == null ? raw : memberName);
         }
         plugin.messages().send(sender, "team-info",
                 Text.placeholder("team", name),
@@ -249,7 +247,14 @@ public final class TeamFeature extends Feature {
         for (String name : teamNames()) {
             List<String> members = membersOf(name);
             if (members.remove(id.toString())) {
+                String previousName = nameOf(name, id.toString());
                 store.get().set("teams." + name + ".members", members);
+                store.get().set("teams." + name + ".member-names." + id, null);
+
+                org.bukkit.scoreboard.Team team = scoreboard() == null ? null : scoreboard().getTeam(name);
+                if (team != null && previousName != null) {
+                    team.removeEntry(previousName);
+                }
             }
         }
     }
@@ -287,16 +292,46 @@ public final class TeamFeature extends Feature {
             team.setAllowFriendlyFire(store.get().getBoolean("teams." + name + ".friendly-fire", false));
 
             for (String raw : membersOf(name)) {
-                try {
-                    String memberName = Bukkit.getOfflinePlayer(UUID.fromString(raw)).getName();
-                    if (memberName != null && !team.hasEntry(memberName)) {
-                        team.addEntry(memberName);
-                    }
-                } catch (IllegalArgumentException ignored) {
-                    // Not a UUID; nothing to mirror.
+                String memberName = nameOf(name, raw);
+                if (memberName != null && !team.hasEntry(memberName)) {
+                    team.addEntry(memberName);
                 }
             }
         }
+    }
+
+    /**
+     * Puts one player onto their scoreboard team.
+     *
+     * <p>Used on join instead of a full re-sync: a whole-server sync on every login is work
+     * proportional to total membership, for one player who changed.
+     */
+    private void syncPlayer(Player player) {
+        String teamName = teamOf(player);
+        if (teamName == null) {
+            return;
+        }
+        // Refresh the stored name in case they changed it since they joined the team.
+        store.get().set("teams." + teamName + ".member-names." + player.getUniqueId(), player.getName());
+
+        org.bukkit.scoreboard.Team team = ensureTeam(teamName);
+        if (team != null && !team.hasEntry(player.getName())) {
+            team.addEntry(player.getName());
+        }
+    }
+
+    private org.bukkit.scoreboard.Team ensureTeam(String name) {
+        Scoreboard scoreboard = scoreboard();
+        if (scoreboard == null) {
+            return null;
+        }
+        org.bukkit.scoreboard.Team team = scoreboard.getTeam(name);
+        return team == null ? scoreboard.registerNewTeam(name) : team;
+    }
+
+    /** The name recorded for a member when they joined, or null if it was never stored. */
+    private String nameOf(String team, String memberId) {
+        return store.get().getString("teams." + team + ".member-names." + memberId);
     }
 
     private Scoreboard scoreboard() {

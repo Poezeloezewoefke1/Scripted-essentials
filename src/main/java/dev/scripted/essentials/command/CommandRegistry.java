@@ -24,7 +24,22 @@ public final class CommandRegistry {
 
     public CommandRegistry(ScriptedEssentials plugin) {
         this.plugin = plugin;
-        this.commandMap = plugin.getServer().getCommandMap();
+        this.commandMap = resolveCommandMap(plugin);
+    }
+
+    /**
+     * {@code Server#getCommandMap()} is Paper API. On Spigot the call is missing entirely and the
+     * JVM raises an Error rather than an Exception, which would surface as an unreadable stack
+     * trace at startup. Catching it lets the plugin say what is actually wrong.
+     */
+    private static CommandMap resolveCommandMap(ScriptedEssentials plugin) {
+        try {
+            return plugin.getServer().getCommandMap();
+        } catch (NoSuchMethodError | NoClassDefFoundError e) {
+            throw new IllegalStateException(
+                    "ScriptedEssentials needs Paper (or a Paper fork such as Purpur). "
+                            + "This server does not provide Server#getCommandMap().", e);
+        }
     }
 
     public void register(SECommand command) {

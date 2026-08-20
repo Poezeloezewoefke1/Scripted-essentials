@@ -5,6 +5,7 @@ import dev.scripted.essentials.command.RootCommand;
 import dev.scripted.essentials.config.Messages;
 import dev.scripted.essentials.core.FeatureCatalog;
 import dev.scripted.essentials.core.FeatureManager;
+import dev.scripted.essentials.core.PermissionRegistrar;
 import dev.scripted.essentials.gui.MenuListener;
 import dev.scripted.essentials.util.ChatPrompt;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +23,7 @@ public final class ScriptedEssentials extends JavaPlugin {
     private CommandRegistry commands;
     private FeatureManager features;
     private ChatPrompt prompts;
+    private PermissionRegistrar permissions;
 
     @Override
     public void onEnable() {
@@ -37,6 +39,10 @@ public final class ScriptedEssentials extends JavaPlugin {
         getServer().getPluginManager().registerEvents(prompts, this);
 
         FeatureCatalog.populate(this, features);
+
+        this.permissions = new PermissionRegistrar(this);
+        permissions.registerAll();
+
         features.loadStates();
         features.enableStored();
 
@@ -50,6 +56,9 @@ public final class ScriptedEssentials extends JavaPlugin {
     public void onDisable() {
         if (features != null) {
             features.shutdown();
+        }
+        if (permissions != null) {
+            permissions.unregisterAll();
         }
     }
 

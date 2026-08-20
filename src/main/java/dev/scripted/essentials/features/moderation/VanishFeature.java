@@ -5,6 +5,7 @@ import dev.scripted.essentials.command.SECommand;
 import dev.scripted.essentials.core.Feature;
 import dev.scripted.essentials.core.FeatureCategory;
 import dev.scripted.essentials.core.FeatureDefinition;
+import dev.scripted.essentials.storage.DataFile;
 import dev.scripted.essentials.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -32,7 +33,9 @@ public final class VanishFeature extends Feature {
 
     private static final String SEE_PERMISSION = "scriptedessentials.vanish.see";
 
+    /** Currently online and vanished. Persistence lives in the data file. */
     private final Set<UUID> vanished = new HashSet<>();
+    private DataFile store;
 
     public VanishFeature(ScriptedEssentials plugin) {
         super(plugin, FeatureDefinition.builder("vanish")
@@ -46,6 +49,8 @@ public final class VanishFeature extends Feature {
 
     @Override
     protected void onRegister() {
+        this.store = data("data/vanished.yml");
+
         command(new SECommand(plugin, "vanish", "v") {
             @Override
             protected void run(CommandSender sender, String[] args) {
@@ -74,16 +79,25 @@ public final class VanishFeature extends Feature {
                 if (!isEnabled()) {
                     return;
                 }
+                Player joining = event.getPlayer();
+
                 // Someone joining must not be able to see anybody already vanished.
-                for (UUID id : vanished) {
-                    Player hidden = Bukkit.getPlayer(id);
-                    if (hidden != null && !event.getPlayer().hasPermission(SEE_PERMISSION)) {
-                        event.getPlayer().hidePlayer(plugin, hidden);
+                if (!joining.hasPermission(SEE_PERMISSION)) {
+                    for (UUID id : vanished) {
+                        Player hidden = Bukkit.getPlayer(id);
+                        if (hidden != null) {
+                            joining.hidePlayer(plugin, hidden);
+                        }
                     }
                 }
-                if (isVanished(event.getPlayer()) && silentJoinLeave()) {
-                    event.joinMessage(null);
-                    applyVisibility(event.getPlayer(), true);
+                // Staff who logged out vanished come back vanished, rather than appearing in the
+                // open on the login they were least expecting it.
+                if (store.get().getBoolean(joining.getUniqueId() + ".vanished", false)) {
+                    vanished.add(joining.getUniqueId());
+                    applyVisibility(joining, true);
+                    if (silentJoinLeave()) {
+                        event.joinMessage(null);
+                    }
                 }
             }
 
@@ -92,7 +106,7 @@ public final class VanishFeature extends Feature {
                 if (isEnabled() && isVanished(event.getPlayer()) && silentJoinLeave()) {
                     event.quitMessage(null);
                 }
-                // Keep the vanished set out of sync with reality no longer than the session.
+                // Drop them from the online set; the stored flag is what survives the session.
                 vanished.remove(event.getPlayer().getUniqueId());
             }
 
@@ -107,13 +121,25 @@ public final class VanishFeature extends Feature {
 
     @Override
     protected void onDisable() {
+        // Reveal everyone, but leave the stored flags alone: turning the feature off should not
+        // quietly discard who was vanished, so switching it back on restores the same state.
         for (UUID id : Set.copyOf(vanished)) {
             Player player = Bukkit.getPlayer(id);
             if (player != null) {
-                setVanished(player, false);
+                applyVisibility(player, false);
             }
         }
         vanished.clear();
+    }
+
+    @Override
+    protected void onEnable() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (store.get().getBoolean(player.getUniqueId() + ".vanished", false)) {
+                vanished.add(player.getUniqueId());
+                applyVisibility(player, true);
+            }
+        }
     }
 
     public boolean isVanished(Player player) {
@@ -123,9 +149,13 @@ public final class VanishFeature extends Feature {
     public void setVanished(Player player, boolean vanish) {
         if (vanish) {
             vanished.add(player.getUniqueId());
+            store.get().set(player.getUniqueId() + ".vanished", true);
+            store.get().set(player.getUniqueId() + ".name", player.getName());
         } else {
             vanished.remove(player.getUniqueId());
+            store.get().set(player.getUniqueId().toString(), null);
         }
+        store.save();
         applyVisibility(player, vanish);
     }
 

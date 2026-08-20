@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -29,9 +30,17 @@ public abstract class SECommand extends Command implements PluginIdentifiableCom
     private boolean playerOnly;
 
     protected SECommand(ScriptedEssentials plugin, String name, String... aliases) {
-        // Aliases go through the superclass constructor rather than setAliases(), which would
+        // Two things matter here.
+        //
+        // The aliases go through the superclass constructor rather than setAliases(), which would
         // publish a partly built `this` to Bukkit before the subclass has finished initialising.
-        super(name, "", "/" + name, List.of(aliases));
+        //
+        // The list must be mutable. When an alias collides with a command another plugin already
+        // owns, CraftBukkit's SimpleCommandMap drops it by calling iterator.remove() on this very
+        // list, so an immutable List.of(...) would throw and take the whole plugin down at
+        // startup. Aliases like /v, /cc and /ec collide often enough for that to be a matter of
+        // time rather than bad luck.
+        super(name, "", "/" + name, new ArrayList<>(Arrays.asList(aliases)));
         this.plugin = plugin;
     }
 

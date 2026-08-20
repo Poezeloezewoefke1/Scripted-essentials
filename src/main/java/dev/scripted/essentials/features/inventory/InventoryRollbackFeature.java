@@ -8,9 +8,7 @@ import dev.scripted.essentials.core.FeatureDefinition;
 import dev.scripted.essentials.storage.DataFile;
 import dev.scripted.essentials.util.Items;
 import dev.scripted.essentials.util.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -163,6 +161,13 @@ public final class InventoryRollbackFeature extends Feature {
         return names;
     }
 
+    /**
+     * Finds the stored id for a player name.
+     *
+     * <p>Only the snapshot file is consulted. Falling back to a name lookup would mean a
+     * potentially blocking profile request on the main thread, and it would buy nothing: a player
+     * with no snapshots has nothing to roll back to either way.
+     */
     private UUID resolveId(String name) {
         for (String key : store.get().getKeys(false)) {
             if (name.equalsIgnoreCase(store.get().getString(key + ".name"))) {
@@ -173,7 +178,6 @@ public final class InventoryRollbackFeature extends Feature {
                 }
             }
         }
-        OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
-        return offline.hasPlayedBefore() ? offline.getUniqueId() : null;
+        return null;
     }
 }

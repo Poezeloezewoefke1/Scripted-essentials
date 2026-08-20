@@ -279,7 +279,9 @@ public final class PermissionsFeature extends Feature {
                     "/seperm user <setgroup|add|remove|info> <player> [value]"));
         }
         String action = args[1].toLowerCase(Locale.ROOT);
-        OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
+        // Prefer the online player: getOfflinePlayer(String) can block on a profile lookup.
+        Player online = Bukkit.getPlayerExact(args[2]);
+        OfflinePlayer target = online != null ? online : Bukkit.getOfflinePlayer(args[2]);
         if (target.getName() == null) {
             throw abort("player-not-found", Text.placeholder("player", args[2]));
         }

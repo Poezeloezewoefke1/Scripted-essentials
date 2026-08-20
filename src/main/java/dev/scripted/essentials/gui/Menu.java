@@ -55,6 +55,9 @@ public abstract class Menu implements InventoryHolder {
         handlers.clear();
         inventory.clear();
         render();
+        // A refresh usually happens while handling a cancelled click, and cancelling makes the
+        // server resend the pre-click view. Without this the player sees the stale icons.
+        viewer.updateInventory();
     }
 
     protected void set(int slot, ItemStack item) {

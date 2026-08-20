@@ -14,7 +14,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Stops any hit from killing a player outright.
@@ -25,6 +27,11 @@ import java.util.List;
  * is no way to write a base damage value back that lands on an exact resulting health.
  */
 public final class HalfHeartFeature extends Feature {
+
+    private static final Set<EntityDamageEvent.DamageCause> UNSTOPPABLE = EnumSet.of(
+            EntityDamageEvent.DamageCause.VOID,
+            EntityDamageEvent.DamageCause.SUICIDE,
+            EntityDamageEvent.DamageCause.KILL);
 
     public HalfHeartFeature(ScriptedEssentials plugin) {
         super(plugin, FeatureDefinition.builder("halfheart")
@@ -63,6 +70,11 @@ public final class HalfHeartFeature extends Feature {
                     return;
                 }
                 if (player.hasPermission("scriptedessentials.halfheart.exempt")) {
+                    return;
+                }
+                // Surviving these would be worse than dying: a capped void hit leaves the player
+                // falling forever at half a heart, and capping /kill makes it look broken.
+                if (UNSTOPPABLE.contains(event.getCause())) {
                     return;
                 }
                 double floor = plugin.getConfig().getDouble("half-heart.minimum-health", 1.0);

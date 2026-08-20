@@ -38,7 +38,9 @@ public final class ChatPrompt implements Listener {
      */
     public void await(Player player, String promptMessageKey, Consumer<String> onInput) {
         pending.put(player.getUniqueId(), onInput);
-        player.closeInventory();
+        // Deferred a tick: await() is normally reached from a menu click, and closing an
+        // inventory inside that event fights the client's in-progress transaction.
+        plugin.getServer().getScheduler().runTask(plugin, player::closeInventory);
         plugin.messages().send(player, promptMessageKey);
         plugin.messages().send(player, "prompt-cancel-hint");
     }

@@ -201,6 +201,19 @@ string is read as legacy only when it contains no `<` tag, so the two styles nev
 
 ---
 
+## Behaviour worth knowing
+
+- **Vanish persists.** Log out vanished and you come back vanished, rather than appearing in the
+  open on the login you were least expecting it. Switching the feature off reveals everyone but
+  keeps the record, so switching it back on restores the same state.
+- **Half heart protection does not fight the void, `/kill`, or a plugin-forced kill.** Capping
+  those would leave a player falling forever at half a heart, or make `/kill` look broken.
+- **The chat filter blocks rather than censors when it cannot censor.** Detection folds leetspeak,
+  but censoring can only strike out the literal spelling; when the two disagree (`m0ney` is caught
+  yet there is no `money` to star out) the message is blocked instead of let through untouched.
+- **`scriptedessentials.*` really works.** Every feature node is registered as a child of it at
+  startup, which is also how LuckPerms discovers the node list for tab completion.
+
 ## Scope notes
 
 Two things are worth stating plainly rather than discovering later.
@@ -253,6 +266,16 @@ Commands and listeners are registered once at startup and stay registered; toggl
 flips `isEnabled()`, which commands check for you and listeners should check on entry. Use
 `onEnable()` and `onDisable()` only for state that genuinely has to start and stop, such as
 repeating tasks.
+
+### `tools/validate.py`
+
+```sh
+python3 tools/validate.py
+```
+
+Checks the things a compiler cannot: a message key used in code but missing from `messages.yml`
+(or defined and never used), a config option documented but never read, two features claiming the
+same command, a feature class nobody registered. Run it after adding a feature.
 
 ### `tools/apicheck`
 

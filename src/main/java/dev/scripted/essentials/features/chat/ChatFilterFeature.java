@@ -120,11 +120,18 @@ public final class ChatFilterFeature extends Feature {
                 if (offending == null) {
                     return;
                 }
-                if ("block".equalsIgnoreCase(plugin.getConfig().getString("chat-filter.mode", "censor"))) {
+                boolean blockMode = "block".equalsIgnoreCase(
+                        plugin.getConfig().getString("chat-filter.mode", "censor"));
+                String censored = censor(plain);
+
+                // Detection folds leetspeak, but censoring can only strike out the literal
+                // spelling. When the two disagree - "m0ney" is caught, yet there is no "money"
+                // to star out - censoring would let the message through untouched, so block it.
+                if (blockMode || censored.equals(plain)) {
                     event.setCancelled(true);
                     plugin.messages().send(player, "chatfilter-blocked");
                 } else {
-                    event.message(Component.text(censor(plain)));
+                    event.message(Component.text(censored));
                 }
             }
 
