@@ -98,6 +98,21 @@ public abstract class Feature {
         plugin.commands().register(command.owner(this));
     }
 
+    /**
+     * Registers a command that stays usable while the feature is switched off.
+     *
+     * <p>Only for the commands that toggle their own feature: binding those to the feature would
+     * make it impossible to switch back on from chat.
+     */
+    protected final void commandUnbound(SECommand command) {
+        plugin.commands().register(command);
+    }
+
+    /** Switches this feature on or off and persists the new state. */
+    protected final void setFeatureEnabled(boolean enabled) {
+        plugin.features().setEnabled(this, enabled);
+    }
+
     /** Creates a data file under {@code plugins/ScriptedEssentials/}, reloaded with the plugin. */
     protected final DataFile data(String path) {
         DataFile file = new DataFile(plugin, path);

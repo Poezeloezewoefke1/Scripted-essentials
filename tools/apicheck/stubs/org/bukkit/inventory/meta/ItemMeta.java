@@ -24,6 +24,8 @@ public interface ItemMeta extends PersistentDataHolder, Cloneable {
     boolean hasEnchant(Enchantment enchantment);
     Map<Enchantment, Integer> getEnchants();
     void setEnchantmentGlintOverride(Boolean override);
+    Boolean getEnchantmentGlintOverride();
+    boolean hasEnchantmentGlintOverride();
     void setCustomModelData(Integer data);
     boolean hasCustomModelData();
     Integer getCustomModelData();

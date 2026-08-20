@@ -6,6 +6,7 @@ import dev.scripted.essentials.config.Messages;
 import dev.scripted.essentials.core.FeatureCatalog;
 import dev.scripted.essentials.core.FeatureManager;
 import dev.scripted.essentials.gui.MenuListener;
+import dev.scripted.essentials.util.ChatPrompt;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -20,6 +21,7 @@ public final class ScriptedEssentials extends JavaPlugin {
     private Messages messages;
     private CommandRegistry commands;
     private FeatureManager features;
+    private ChatPrompt prompts;
 
     @Override
     public void onEnable() {
@@ -29,7 +31,10 @@ public final class ScriptedEssentials extends JavaPlugin {
         this.commands = new CommandRegistry(this);
         this.features = new FeatureManager(this);
 
+        this.prompts = new ChatPrompt(this);
+
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
+        getServer().getPluginManager().registerEvents(prompts, this);
 
         FeatureCatalog.populate(this, features);
         features.loadStates();
@@ -65,5 +70,10 @@ public final class ScriptedEssentials extends JavaPlugin {
 
     public FeatureManager features() {
         return features;
+    }
+
+    /** Shared "type your answer in chat" helper, used by the editor menus. */
+    public ChatPrompt prompts() {
+        return prompts;
     }
 }
