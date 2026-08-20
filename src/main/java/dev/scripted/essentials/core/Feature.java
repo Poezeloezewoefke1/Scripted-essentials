@@ -95,7 +95,7 @@ public abstract class Feature {
 
     /** Registers a command owned by this feature. Disabled features reject their own commands. */
     protected final void command(SECommand command) {
-        plugin.commands().register(command);
+        plugin.commands().register(command.owner(this));
     }
 
     /** Creates a data file under {@code plugins/ScriptedEssentials/}, reloaded with the plugin. */

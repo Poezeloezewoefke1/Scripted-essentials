@@ -128,3 +128,20 @@ dimension-lock:
   # Worlds nobody without scriptedessentials.bypass may enter.
   locked-worlds: []
   message: '<red>That dimension is currently closed.'
+
+# Named bundles of potion effects for /potion <preset>.
+# Format: <effect>:<level>:<duration>. Duration accepts 30s, 10m, 2h; 0 means endless.
+potion-presets:
+  pvp:
+    - 'strength:1:5m'
+    - 'speed:2:5m'
+    - 'fire_resistance:1:5m'
+    - 'regeneration:2:45s'
+  builder:
+    - 'night_vision:1:0'
+    - 'water_breathing:1:0'
+    - 'haste:2:0'
+  explorer:
+    - 'speed:2:10m'
+    - 'night_vision:1:10m'
+    - 'jump_boost:2:10m'
