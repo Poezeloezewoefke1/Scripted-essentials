@@ -15,7 +15,14 @@ OUT="$ROOT/tools/apicheck/build"
 rm -rf "$OUT"
 mkdir -p "$OUT/classes"
 
-CP="$(find "$ROOT/tools/apicheck/lib" -name '*.jar' | tr '\n' ':')"
+LIB="$ROOT/tools/apicheck/lib"
+if [ -z "$(find "$LIB" -name '*.jar' 2>/dev/null)" ]; then
+    echo "Fetching Adventure jars (once) ..."
+    mvn -q -f "$ROOT/tools/apicheck/deps-pom.xml" dependency:copy-dependencies \
+        -DoutputDirectory="$LIB"
+fi
+
+CP="$(find "$LIB" -name '*.jar' | tr '\n' ':')"
 
 find "$ROOT/src/main/java" "$ROOT/tools/apicheck/stubs" -name '*.java' > "$OUT/sources.txt"
 

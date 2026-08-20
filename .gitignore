@@ -10,3 +10,4 @@ out/
 .classpath
 .project
 tools/apicheck/build/
+tools/apicheck/lib/
