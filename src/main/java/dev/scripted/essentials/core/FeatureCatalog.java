@@ -8,6 +8,12 @@ import dev.scripted.essentials.features.inventory.InvseeFeature;
 import dev.scripted.essentials.features.inventory.ItemMakerFeature;
 import dev.scripted.essentials.features.inventory.KeepInventoryFeature;
 import dev.scripted.essentials.features.inventory.KitFeature;
+import dev.scripted.essentials.features.moderation.CommandBlockerFeature;
+import dev.scripted.essentials.features.moderation.FreezeFeature;
+import dev.scripted.essentials.features.moderation.HalfHeartFeature;
+import dev.scripted.essentials.features.moderation.RecordingModeFeature;
+import dev.scripted.essentials.features.moderation.ServerLockFeature;
+import dev.scripted.essentials.features.moderation.VanishFeature;
 import dev.scripted.essentials.features.player.DurabilityFeature;
 import dev.scripted.essentials.features.player.FeedFeature;
 import dev.scripted.essentials.features.player.FlyFeature;
@@ -27,6 +33,9 @@ import dev.scripted.essentials.features.teleport.OfflineTeleportFeature;
 import dev.scripted.essentials.features.teleport.SpawnFeature;
 import dev.scripted.essentials.features.teleport.TopFeature;
 import dev.scripted.essentials.features.teleport.WarpFeature;
+import dev.scripted.essentials.features.world.ChunkToolsFeature;
+import dev.scripted.essentials.features.world.DimensionLockFeature;
+import dev.scripted.essentials.features.world.FakeWorldBorderFeature;
 
 /**
  * The single list of every feature the plugin ships.
@@ -71,5 +80,18 @@ public final class FeatureCatalog {
         manager.register(new KitFeature(plugin));
         manager.register(new ItemMakerFeature(plugin));
         manager.register(new AutoClearFeature(plugin));
+
+        // --- moderation ---
+        manager.register(new HalfHeartFeature(plugin));
+        manager.register(new VanishFeature(plugin));
+        manager.register(new FreezeFeature(plugin));
+        manager.register(new ServerLockFeature(plugin));
+        manager.register(new CommandBlockerFeature(plugin));
+        manager.register(new RecordingModeFeature(plugin));
+
+        // --- world ---
+        manager.register(new DimensionLockFeature(plugin));
+        manager.register(new FakeWorldBorderFeature(plugin));
+        manager.register(new ChunkToolsFeature(plugin));
     }
 }
