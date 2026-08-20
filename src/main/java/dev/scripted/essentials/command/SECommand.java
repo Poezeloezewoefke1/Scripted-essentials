@@ -29,11 +29,10 @@ public abstract class SECommand extends Command implements PluginIdentifiableCom
     private boolean playerOnly;
 
     protected SECommand(ScriptedEssentials plugin, String name, String... aliases) {
-        super(name);
+        // Aliases go through the superclass constructor rather than setAliases(), which would
+        // publish a partly built `this` to Bukkit before the subclass has finished initialising.
+        super(name, "", "/" + name, List.of(aliases));
         this.plugin = plugin;
-        if (aliases.length > 0) {
-            setAliases(List.of(aliases));
-        }
     }
 
     /** Binds this command to a feature, so it is refused while that feature is off. */

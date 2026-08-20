@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.profile.PlayerProfile;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 
@@ -38,4 +39,7 @@ public final class Bukkit {
     public static void broadcast(Component message) { }
     public static ItemStack createItemStack(Material material) { throw new UnsupportedOperationException(); }
     public static int getMaxPlayers() { throw new UnsupportedOperationException(); }
+    public static org.bukkit.entity.Entity getEntity(UUID uuid) { throw new UnsupportedOperationException(); }
+    public static PlayerProfile createPlayerProfile(UUID uniqueId, String name) { throw new UnsupportedOperationException(); }
+    public static PlayerProfile createPlayerProfile(String name) { throw new UnsupportedOperationException(); }
 }

@@ -70,7 +70,7 @@ public final class FeatureMenu extends Menu {
         }
 
         renderFooter(maxPage);
-        fill(ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).name("<reset>").build());
+        fill(ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).name(" ").build());
     }
 
     private void renderFooter(int maxPage) {

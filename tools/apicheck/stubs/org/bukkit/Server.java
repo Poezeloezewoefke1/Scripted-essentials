@@ -20,6 +20,7 @@ public interface Server {
     List<World> getWorlds();
     World getWorld(String name);
     Player getPlayerExact(String name);
+    org.bukkit.entity.Entity getEntity(java.util.UUID uuid);
     int getMaxPlayers();
     String getVersion();
 }

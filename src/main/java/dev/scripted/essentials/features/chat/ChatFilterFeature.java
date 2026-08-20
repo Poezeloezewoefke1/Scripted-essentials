@@ -19,11 +19,11 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Word filtering for chat and signs, plus repeat and rate limiting.
@@ -39,8 +39,9 @@ public final class ChatFilterFeature extends Feature {
     private static final Map<Character, Character> SUBSTITUTIONS = Map.of(
             '0', 'o', '1', 'i', '3', 'e', '4', 'a', '5', 's', '7', 't', '@', 'a', '$', 's');
 
-    private final Map<UUID, String> lastMessage = new HashMap<>();
-    private final Map<UUID, Long> lastMessageAt = new HashMap<>();
+    // Chat fires off the main thread, so these are touched by several threads at once.
+    private final Map<UUID, String> lastMessage = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> lastMessageAt = new ConcurrentHashMap<>();
 
     public ChatFilterFeature(ScriptedEssentials plugin) {
         super(plugin, FeatureDefinition.builder("chatfilter")

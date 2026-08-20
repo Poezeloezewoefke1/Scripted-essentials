@@ -153,8 +153,11 @@ public final class ChatMuteFeature extends Feature {
         }
         long remaining = (until - System.currentTimeMillis()) / 1000L;
         if (remaining <= 0) {
-            store.get().set(player.getUniqueId().toString(), null);
-            store.save();
+            // This is reached from the async chat handler; YAML writes belong on the main thread.
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                store.get().set(player.getUniqueId().toString(), null);
+                store.save();
+            });
             return 0;
         }
         return remaining;

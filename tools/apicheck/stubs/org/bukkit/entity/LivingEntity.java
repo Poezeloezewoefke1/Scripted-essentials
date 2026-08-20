@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Collection;
 import java.util.Set;
 
-public interface LivingEntity extends Damageable {
+public interface LivingEntity extends Damageable, ProjectileSource {
     boolean addPotionEffect(PotionEffect effect);
     boolean addPotionEffects(Collection<PotionEffect> effects);
     void removePotionEffect(PotionEffectType type);
@@ -25,4 +25,5 @@ public interface LivingEntity extends Damageable {
     Block getTargetBlockExact(int maxDistance);
     Entity getTargetEntity(int maxDistance);
     void setCanPickupItems(boolean pickup);
+    Player getKiller();
 }

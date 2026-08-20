@@ -40,9 +40,17 @@ import dev.scripted.essentials.features.teleport.OfflineTeleportFeature;
 import dev.scripted.essentials.features.teleport.SpawnFeature;
 import dev.scripted.essentials.features.teleport.TopFeature;
 import dev.scripted.essentials.features.teleport.WarpFeature;
+import dev.scripted.essentials.features.npc.NpcFeature;
+import dev.scripted.essentials.features.npc.VillagerMakerFeature;
+import dev.scripted.essentials.features.social.NicknameFeature;
 import dev.scripted.essentials.features.social.TeamChatFeature;
 import dev.scripted.essentials.features.social.TeamFeature;
 import dev.scripted.essentials.features.social.VoiceChatMuteFeature;
+import dev.scripted.essentials.features.systems.DeathActionsFeature;
+import dev.scripted.essentials.features.systems.OrbitalWeaponsFeature;
+import dev.scripted.essentials.features.systems.PermissionsFeature;
+import dev.scripted.essentials.features.systems.SkinFeature;
+import dev.scripted.essentials.features.systems.StasisFeature;
 import dev.scripted.essentials.features.world.ChunkToolsFeature;
 import dev.scripted.essentials.features.world.DimensionLockFeature;
 import dev.scripted.essentials.features.world.FakeWorldBorderFeature;
@@ -119,5 +127,15 @@ public final class FeatureCatalog {
         TeamFeature teams = new TeamFeature(plugin);
         manager.register(teams);
         manager.register(new TeamChatFeature(plugin, teams));
+        manager.register(new NicknameFeature(plugin));
+
+        // --- headline systems ---
+        manager.register(new NpcFeature(plugin));
+        manager.register(new VillagerMakerFeature(plugin));
+        manager.register(new SkinFeature(plugin));
+        manager.register(new DeathActionsFeature(plugin));
+        manager.register(new OrbitalWeaponsFeature(plugin));
+        manager.register(new StasisFeature(plugin));
+        manager.register(new PermissionsFeature(plugin));
     }
 }

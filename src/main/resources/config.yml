@@ -3,16 +3,13 @@
 # Feature on/off switches are NOT stored here - they live in features.yml and are meant to be
 # changed in-game with /se. This file holds the settings each feature reads.
 
-general:
-  # Play a click/confirm sound when a command succeeds or fails.
-  feedback-sounds: true
-  # Echo a chat confirmation for administrative commands.
-  command-feedback: true
+# Interface sounds and the staff command log are not settings here: they are features, switched
+# on and off from /se like everything else (Feedback Sounds, Command Feedback).
 
 vanish:
-  # Hide vanished players from the tab list as well as the world.
-  hide-from-tab-list: true
   # Suppress the join and leave broadcast when someone toggles vanish.
+  # Vanished players are always hidden from the tab list too, because the API call that hides a
+  # player from the world removes them from the list as well - there is no separate switch.
   silent-join-leave: true
 
 half-heart:
@@ -150,3 +147,11 @@ voice-chat:
   # Permission node your voice chat plugin checks before letting someone talk.
   # Simple Voice Chat uses voicechat.speak; /vcmute revokes it for the muted player.
   speak-permission: voicechat.speak
+
+death-actions:
+  # Runs top to bottom when a player dies. Format: <type>:<value>
+  # Types: message, broadcast, command (as the player), console, effect, lightning, drop-head
+  # Placeholders: <player> <killer> <world> <x> <y> <z>
+  actions:
+    - 'message:<red>You died at <x>, <y>, <z> in <world>.'
+    - 'lightning'

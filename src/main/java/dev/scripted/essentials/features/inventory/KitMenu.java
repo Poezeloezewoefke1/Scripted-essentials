@@ -83,6 +83,6 @@ public final class KitMenu extends Menu {
 
         button(49, ItemBuilder.of(Material.BARRIER).name("<red>Close").build(),
                 event -> viewer.closeInventory());
-        fill(ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).name("<reset>").build());
+        fill(ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE).name(" ").build());
     }
 }

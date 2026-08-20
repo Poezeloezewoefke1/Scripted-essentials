@@ -16,11 +16,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A session mode for recording video: no chat noise, no accidental commands.
@@ -32,7 +31,8 @@ public final class RecordingModeFeature extends Feature {
 
     private static final Set<String> ALWAYS_ALLOWED = Set.of("recording", "se");
 
-    private final Set<UUID> recording = new HashSet<>();
+    // Read from the async chat handler while commands write to it on the main thread.
+    private final Set<UUID> recording = ConcurrentHashMap.newKeySet();
 
     public RecordingModeFeature(ScriptedEssentials plugin) {
         super(plugin, FeatureDefinition.builder("recordingmode")

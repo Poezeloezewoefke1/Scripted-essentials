@@ -159,7 +159,9 @@ public final class KitFeature extends Feature {
             if (!Items.isEmpty(armor[slot]) && Items.isEmpty(current[slot])) {
                 current[slot] = armor[slot].clone();
             } else if (!Items.isEmpty(armor[slot])) {
-                player.getInventory().addItem(armor[slot].clone());
+                // Their own armour stays on; the kit's copy goes to the bag, or the floor.
+                player.getInventory().addItem(armor[slot].clone()).values().forEach(left ->
+                        player.getWorld().dropItemNaturally(player.getLocation(), left));
             }
         }
         player.getInventory().setArmorContents(current);

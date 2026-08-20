@@ -17,9 +17,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@code /tc} — chat that only your own team sees.
@@ -30,7 +30,8 @@ import java.util.UUID;
 public final class TeamChatFeature extends Feature {
 
     private final TeamFeature teams;
-    private final Set<UUID> latched = new HashSet<>();
+    // Read from the async chat handler while commands write to it on the main thread.
+    private final Set<UUID> latched = ConcurrentHashMap.newKeySet();
 
     public TeamChatFeature(ScriptedEssentials plugin, TeamFeature teams) {
         super(plugin, FeatureDefinition.builder("teamchat")
