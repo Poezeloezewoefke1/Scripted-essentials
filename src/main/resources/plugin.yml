@@ -1,0 +1,20 @@
+name: ScriptedEssentials
+version: '${project.version}'
+main: dev.scripted.essentials.ScriptedEssentials
+api-version: '1.21'
+description: An all-in-one essentials suite with a toggle for every feature.
+website: https://github.com/Poezeloezewoefke1/Scripted-essentials
+authors:
+  - Scripted
+softdepend:
+  - PlaceholderAPI
+  - voicechat
+
+# Commands are registered at runtime by the feature that owns them, so they are not listed here.
+permissions:
+  scriptedessentials.admin:
+    description: Access to /se, the control panel and every administrative command.
+    default: op
+  scriptedessentials.bypass:
+    description: Bypass server lock, command blocking, chat filters and dimension locks.
+    default: op

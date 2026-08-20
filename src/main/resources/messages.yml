@@ -1,0 +1,23 @@
+# All strings support MiniMessage (<red>, <gradient:#a:#b>) or legacy &-codes.
+prefix: '<dark_gray>[<gradient:#4facfe:#00f2fe>SE</gradient><dark_gray>] <gray>'
+
+# --- framework ---------------------------------------------------------------------------------
+no-permission: '<red>You do not have permission to do that. <dark_gray>(<permission>)'
+player-only: '<red>Only a player can run that command.'
+console-needs-target: '<red>Run that from the console with a player name.'
+command-error: '<red>Something went wrong running that command. Check the console.'
+player-not-found: '<red>No online player named <white><player></white>.'
+usage: '<red>Usage: <white><usage>'
+invalid-number: '<red><white><input></white> is not a valid number.'
+feature-disabled: '<red>The <white><feature></white> feature is disabled on this server.'
+
+# --- /se ---------------------------------------------------------------------------------------
+reloaded: '<green>Configuration reloaded.'
+version: '<gray>ScriptedEssentials <white>v<version>'
+unknown-subcommand: '<red>Unknown subcommand <white><input></white>.'
+unknown-feature: '<red>There is no feature with the id <white><id></white>.'
+feature-enabled: '<green>Enabled <white><name></white>.'
+feature-disabled-ok: '<red>Disabled <white><name></white>.'
+feature-list-header: '<dark_gray>--- <gradient:#4facfe:#00f2fe>Features</gradient> <dark_gray>---'
+feature-list-entry-on: '<green>+ <white><name> <dark_gray>(<id>)'
+feature-list-entry-off: '<red>- <gray><name> <dark_gray>(<id>)'

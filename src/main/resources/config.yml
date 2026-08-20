@@ -1,0 +1,130 @@
+# ScriptedEssentials
+#
+# Feature on/off switches are NOT stored here - they live in features.yml and are meant to be
+# changed in-game with /se. This file holds the settings each feature reads.
+
+general:
+  # Play a click/confirm sound when a command succeeds or fails.
+  feedback-sounds: true
+  # Echo a chat confirmation for administrative commands.
+  command-feedback: true
+
+vanish:
+  # Hide vanished players from the tab list as well as the world.
+  hide-from-tab-list: true
+  # Suppress the join and leave broadcast when someone toggles vanish.
+  silent-join-leave: true
+
+half-heart:
+  # Damage that would drop a player below this many health points is capped instead.
+  minimum-health: 1.0
+  # Sound played when a hit is capped. Set to an empty string for silence.
+  sound: ENTITY_PLAYER_LEVELUP
+
+freeze:
+  # Message shown repeatedly to a frozen player.
+  reminder: '<red>You are frozen. Do not log out.'
+  # Seconds between reminders.
+  reminder-interval: 5
+
+server-lock:
+  motd: '<red>The server is currently locked.'
+  kick-message: '<red>The server is locked. Try again later.'
+
+chat-filter:
+  # Words are matched case-insensitively, with common letter substitutions collapsed first.
+  blocked-words:
+    - example
+  # 'block' cancels the message, 'censor' replaces the word with asterisks.
+  mode: censor
+  # Apply the same filter to text written on signs.
+  filter-signs: true
+  # Stop players posting the same message repeatedly.
+  block-repeated-messages: true
+  # Minimum seconds between two chat messages from the same player. 0 disables the cooldown.
+  cooldown-seconds: 0
+
+join-leave-messages:
+  join: '<dark_gray>[<green>+</green>] <gray><player>'
+  leave: '<dark_gray>[<red>-</red>] <gray><player>'
+  first-join: '<gold>Welcome <player> to the server!'
+
+auto-clear:
+  # Minutes between ground-item sweeps.
+  interval-minutes: 10
+  # Seconds of warning before the sweep runs.
+  warning-seconds: 10
+  # Item types never removed by the sweep.
+  protected-items:
+    - NETHER_STAR
+    - ELYTRA
+
+inventory-rollback:
+  # How many inventory snapshots to keep per player.
+  snapshots-per-player: 10
+  # Take a snapshot on death.
+  snapshot-on-death: true
+  # Take a snapshot on quit.
+  snapshot-on-quit: true
+
+recording-mode:
+  # Effects applied to a player in a recording session.
+  hide-other-players: false
+  mute-chat: true
+  block-commands: true
+
+fake-world-border:
+  # Radius in blocks from the world spawn, per world. Players are pushed back inside.
+  default-radius: 5000
+  # Message shown when a player is pushed back.
+  message: '<red>You have reached the edge of the world.'
+
+orbital-weapons:
+  # Seconds a player must wait between strikes.
+  cooldown-seconds: 60
+  # Blocks of radius affected by a strike.
+  radius: 4
+  # Whether the strike breaks blocks. Off by default so it is safe on survival servers.
+  break-blocks: false
+
+stasis:
+  # Seconds an ender pearl is held in stasis before it is released.
+  max-hold-seconds: 600
+
+npcs:
+  # Interaction cooldown in milliseconds, to stop double-fires from one click.
+  interact-cooldown-ms: 500
+
+nicknames:
+  # Maximum visible length of a nickname, colour codes excluded.
+  max-length: 16
+  # Require nicknames to contain the player's real name somewhere.
+  require-real-name: false
+  # Colour codes players may use in their own nickname.
+  allow-colours: true
+
+kits:
+  # Kits a player may not claim again until this many seconds have passed.
+  default-cooldown-seconds: 3600
+
+spawn:
+  # Teleport players to spawn when they join.
+  teleport-on-join: false
+  # Teleport players to spawn when they respawn, instead of the world's bed/anchor logic.
+  teleport-on-respawn: false
+
+command-blocker:
+  # Commands nobody without scriptedessentials.bypass may run.
+  blocked:
+    - /pl
+    - /plugins
+    - /ver
+    - /version
+    - /about
+    - /icanhasbukkit
+  message: '<red>Unknown command. Type "/help" for help.'
+
+dimension-lock:
+  # Worlds nobody without scriptedessentials.bypass may enter.
+  locked-worlds: []
+  message: '<red>That dimension is currently closed.'
