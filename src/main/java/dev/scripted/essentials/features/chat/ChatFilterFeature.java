@@ -6,6 +6,7 @@ import dev.scripted.essentials.core.Feature;
 import dev.scripted.essentials.core.FeatureCategory;
 import dev.scripted.essentials.core.FeatureDefinition;
 import dev.scripted.essentials.util.Text;
+import dev.scripted.essentials.util.WordFilter;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -36,9 +37,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class ChatFilterFeature extends Feature {
 
     private static final String BYPASS = "scriptedessentials.bypass";
-    private static final Map<Character, Character> SUBSTITUTIONS = Map.of(
-            '0', 'o', '1', 'i', '3', 'e', '4', 'a', '5', 's', '7', 't', '@', 'a', '$', 's');
-
     // Chat fires off the main thread, so these are touched by several threads at once.
     private final Map<UUID, String> lastMessage = new ConcurrentHashMap<>();
     private final Map<UUID, Long> lastMessageAt = new ConcurrentHashMap<>();
@@ -116,13 +114,13 @@ public final class ChatFilterFeature extends Feature {
                     event.setCancelled(true);
                     return;
                 }
-                String offending = firstMatch(plain);
+                String offending = WordFilter.firstMatch(plain, blockedWords());
                 if (offending == null) {
                     return;
                 }
                 boolean blockMode = "block".equalsIgnoreCase(
                         plugin.getConfig().getString("chat-filter.mode", "censor"));
-                String censored = censor(plain);
+                String censored = WordFilter.censor(plain, blockedWords());
 
                 // Detection folds leetspeak, but censoring can only strike out the literal
                 // spelling. When the two disagree - "m0ney" is caught, yet there is no "money"
@@ -145,8 +143,8 @@ public final class ChatFilterFeature extends Feature {
                 List<Component> lines = event.lines();
                 for (int index = 0; index < lines.size(); index++) {
                     String plain = PlainTextComponentSerializer.plainText().serialize(lines.get(index));
-                    if (firstMatch(plain) != null) {
-                        event.line(index, Component.text(censor(plain)));
+                    if (WordFilter.firstMatch(plain, blockedWords()) != null) {
+                        event.line(index, Component.text(WordFilter.censor(plain, blockedWords())));
                     }
                 }
             }
@@ -159,29 +157,8 @@ public final class ChatFilterFeature extends Feature {
         });
     }
 
-    /** Returns the first blocked word the text contains, or null if it is clean. */
-    public String firstMatch(String text) {
-        String folded = fold(text);
-        for (String word : plugin.getConfig().getStringList("chat-filter.blocked-words")) {
-            String target = fold(word);
-            if (!target.isEmpty() && folded.contains(target)) {
-                return word;
-            }
-        }
-        return null;
-    }
-
-    /** Replaces every blocked word in the original text with asterisks. */
-    private String censor(String text) {
-        String result = text;
-        for (String word : plugin.getConfig().getStringList("chat-filter.blocked-words")) {
-            if (word.isBlank()) {
-                continue;
-            }
-            result = result.replaceAll("(?i)" + java.util.regex.Pattern.quote(word),
-                    "*".repeat(word.length()));
-        }
-        return result;
+    private List<String> blockedWords() {
+        return plugin.getConfig().getStringList("chat-filter.blocked-words");
     }
 
     private boolean isSpam(Player player, String message) {
@@ -206,23 +183,4 @@ public final class ChatFilterFeature extends Feature {
         return false;
     }
 
-    /**
-     * Normalises text so obfuscated spellings still match: lowercase, common digit and symbol
-     * substitutions undone, everything that is not a letter removed, repeated letters collapsed.
-     */
-    private static String fold(String input) {
-        StringBuilder out = new StringBuilder(input.length());
-        char previous = 0;
-        for (char raw : input.toLowerCase(Locale.ROOT).toCharArray()) {
-            char letter = SUBSTITUTIONS.getOrDefault(raw, raw);
-            if (!Character.isLetter(letter)) {
-                continue;
-            }
-            if (letter != previous) {
-                out.append(letter);
-                previous = letter;
-            }
-        }
-        return out.toString();
-    }
 }

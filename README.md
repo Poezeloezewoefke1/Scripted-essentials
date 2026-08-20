@@ -230,7 +230,7 @@ that already looks the part.
 
 ## Development
 
-The plugin is a plain Maven project; `src/main/java` is all of it.
+The plugin is a plain Maven project: `src/main/java` is the plugin, `src/test/java` the tests.
 
 Adding a feature is one class and one line:
 
@@ -266,6 +266,18 @@ Commands and listeners are registered once at startup and stay registered; toggl
 flips `isEnabled()`, which commands check for you and listeners should check on entry. Use
 `onEnable()` and `onDisable()` only for state that genuinely has to start and stop, such as
 repeating tasks.
+
+### Tests
+
+```sh
+mvn test                    # the normal way, against the real paper-api
+./tools/apicheck/test.sh    # the same tests against the local stubs
+```
+
+The tests cover the logic that needs no server and has real edge cases: duration parsing and
+formatting, MiniMessage/legacy text handling (including that placeholder content is never
+re-parsed as markup, so a player cannot inject formatting through their name), the chat filter's
+folding, matching and censoring, and command name normalisation.
 
 ### `tools/validate.py`
 

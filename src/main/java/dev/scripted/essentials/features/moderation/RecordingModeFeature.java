@@ -5,6 +5,7 @@ import dev.scripted.essentials.command.SECommand;
 import dev.scripted.essentials.core.Feature;
 import dev.scripted.essentials.core.FeatureCategory;
 import dev.scripted.essentials.core.FeatureDefinition;
+import dev.scripted.essentials.util.CommandNames;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -81,8 +81,7 @@ public final class RecordingModeFeature extends Feature {
                         || !recording.contains(event.getPlayer().getUniqueId())) {
                     return;
                 }
-                String typed = event.getMessage().split(" ")[0]
-                        .replaceFirst("^/", "").toLowerCase(Locale.ROOT);
+                String typed = CommandNames.normalise(event.getMessage());
                 if (ALWAYS_ALLOWED.contains(typed)) {
                     return;
                 }

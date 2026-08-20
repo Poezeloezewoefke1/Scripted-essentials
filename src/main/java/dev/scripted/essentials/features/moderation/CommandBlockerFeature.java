@@ -5,6 +5,7 @@ import dev.scripted.essentials.command.SECommand;
 import dev.scripted.essentials.core.Feature;
 import dev.scripted.essentials.core.FeatureCategory;
 import dev.scripted.essentials.core.FeatureDefinition;
+import dev.scripted.essentials.util.CommandNames;
 import dev.scripted.essentials.util.Text;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -51,7 +52,7 @@ public final class CommandBlockerFeature extends Feature {
                 if (args.length < 2) {
                     throw fail("usage", Text.placeholder("usage", "/cmdblock <add|remove|list> [command]"));
                 }
-                String target = normalise(args[1]);
+                String target = CommandNames.normalise(args[1]);
 
                 switch (args[0].toLowerCase(Locale.ROOT)) {
                     case "add" -> {
@@ -94,7 +95,7 @@ public final class CommandBlockerFeature extends Feature {
                 if (!isEnabled() || event.getPlayer().hasPermission(BYPASS)) {
                     return;
                 }
-                String typed = normalise(event.getMessage().split(" ")[0]);
+                String typed = CommandNames.normalise(event.getMessage());
                 if (!blockedCommands().contains(typed)) {
                     return;
                 }
@@ -114,21 +115,9 @@ public final class CommandBlockerFeature extends Feature {
     private List<String> blockedCommands() {
         List<String> normalised = new ArrayList<>();
         for (String raw : plugin.getConfig().getStringList("command-blocker.blocked")) {
-            normalised.add(normalise(raw));
+            normalised.add(CommandNames.normalise(raw));
         }
         return normalised;
     }
 
-    /** Strips the leading slash and any {@code plugin:} prefix, and lowercases. */
-    private static String normalise(String command) {
-        String value = command.trim().toLowerCase(Locale.ROOT);
-        if (value.startsWith("/")) {
-            value = value.substring(1);
-        }
-        int colon = value.indexOf(':');
-        if (colon >= 0) {
-            value = value.substring(colon + 1);
-        }
-        return value;
-    }
 }

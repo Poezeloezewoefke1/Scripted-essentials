@@ -2,9 +2,9 @@
 <!--
   Not part of the plugin build.
 
-  This POM exists only to pull the Adventure jars that Paper bundles, so the local
-  type-check harness (tools/apicheck/check.sh) can compile against the real text API
-  instead of a stub of it.
+  This POM exists only to pull jars the local harness needs: the Adventure jars that Paper
+  bundles, so check.sh compiles against the real text API instead of a stub of it, and the
+  JUnit console launcher so test.sh can compile and run the unit tests.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
     <properties>
         <adventure.version>4.17.0</adventure.version>
+        <junit.platform.version>1.11.3</junit.platform.version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,6 +38,11 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-serializer-plain</artifactId>
             <version>${adventure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-console-standalone</artifactId>
+            <version>${junit.platform.version}</version>
         </dependency>
     </dependencies>
 </project>
