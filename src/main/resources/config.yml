@@ -145,3 +145,8 @@ potion-presets:
     - 'speed:2:10m'
     - 'night_vision:1:10m'
     - 'jump_boost:2:10m'
+
+voice-chat:
+  # Permission node your voice chat plugin checks before letting someone talk.
+  # Simple Voice Chat uses voicechat.speak; /vcmute revokes it for the muted player.
+  speak-permission: voicechat.speak

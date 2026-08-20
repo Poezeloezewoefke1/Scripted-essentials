@@ -1,6 +1,13 @@
 package dev.scripted.essentials.core;
 
 import dev.scripted.essentials.ScriptedEssentials;
+import dev.scripted.essentials.features.chat.ChatFilterFeature;
+import dev.scripted.essentials.features.chat.ChatMuteFeature;
+import dev.scripted.essentials.features.chat.ClearChatFeature;
+import dev.scripted.essentials.features.chat.CommandFeedbackFeature;
+import dev.scripted.essentials.features.chat.FeedbackSoundsFeature;
+import dev.scripted.essentials.features.chat.JoinLeaveMessagesFeature;
+import dev.scripted.essentials.features.chat.PrivateMessagesFeature;
 import dev.scripted.essentials.features.inventory.AutoClearFeature;
 import dev.scripted.essentials.features.inventory.EnderChestViewFeature;
 import dev.scripted.essentials.features.inventory.InventoryRollbackFeature;
@@ -33,6 +40,9 @@ import dev.scripted.essentials.features.teleport.OfflineTeleportFeature;
 import dev.scripted.essentials.features.teleport.SpawnFeature;
 import dev.scripted.essentials.features.teleport.TopFeature;
 import dev.scripted.essentials.features.teleport.WarpFeature;
+import dev.scripted.essentials.features.social.TeamChatFeature;
+import dev.scripted.essentials.features.social.TeamFeature;
+import dev.scripted.essentials.features.social.VoiceChatMuteFeature;
 import dev.scripted.essentials.features.world.ChunkToolsFeature;
 import dev.scripted.essentials.features.world.DimensionLockFeature;
 import dev.scripted.essentials.features.world.FakeWorldBorderFeature;
@@ -93,5 +103,21 @@ public final class FeatureCatalog {
         manager.register(new DimensionLockFeature(plugin));
         manager.register(new FakeWorldBorderFeature(plugin));
         manager.register(new ChunkToolsFeature(plugin));
+
+        // --- chat ---
+        manager.register(new ChatMuteFeature(plugin));
+        manager.register(new ClearChatFeature(plugin));
+        manager.register(new ChatFilterFeature(plugin));
+        manager.register(new JoinLeaveMessagesFeature(plugin));
+        manager.register(new PrivateMessagesFeature(plugin));
+        manager.register(new CommandFeedbackFeature(plugin));
+        manager.register(new FeedbackSoundsFeature(plugin));
+        manager.register(new VoiceChatMuteFeature(plugin));
+
+        // --- social ---
+        // Team chat reads its membership from the team system, so that one is built first.
+        TeamFeature teams = new TeamFeature(plugin);
+        manager.register(teams);
+        manager.register(new TeamChatFeature(plugin, teams));
     }
 }
