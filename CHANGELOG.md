@@ -1,5 +1,43 @@
 # Changelog
 
+## v1.0.1
+
+### Fixed
+
+- **`/fulltools` looked unenchanted.** The set was built with every item flag applied, which
+  includes `HIDE_ENCHANTS`, so the enchantments were present and working but invisible in the
+  tooltip. Nothing is hidden any more.
+- **`/fulltools` gear is no longer unbreakable.** It carries Unbreaking III and Mending instead,
+  so it wears and repairs like real gear.
+- Enchantments now resolve through `RegistryAccess`; `Registry.ENCHANTMENT` has been deprecated
+  since 1.21, when enchantments became data driven.
+
+### Added
+
+- **`/fulltools <tier>`** — pick the material: `leather`, `chainmail`, `wooden`, `stone`,
+  `golden`, `iron`, `diamond`, `netherite` (the default). Common spellings such as `wood`,
+  `gold`, `chain` and `dia` work too. Tiers that only exist as one half hand out that half:
+  wood and stone have no armour, leather and chainmail have no tools.
+- `/fulltools <tier> <player>` gives the set to someone else. A first argument that names an
+  online player still works on its own, so `/fulltools Notch` is unchanged.
+
+### Changed
+
+- Enchantments are now chosen for PvP:
+  - **No Thorns.** It spends extra armour durability on every hit taken and returns trivial
+    damage.
+  - **No Knockback** on the sword, which would push opponents out of combo range.
+  - Protection IV over Blast/Fire/Projectile Protection: those each win against one damage type
+    only, and all four are mutually exclusive.
+  - Sword: Sharpness, Fire Aspect, Looting, Sweeping Edge, Unbreaking, Mending.
+  - Axe: Sharpness and Efficiency — an axe disables shields, so it is a combat item too.
+  - Boots: Feather Falling and Depth Strider. Leggings: Swift Sneak. Helmet: Respiration and
+    Aqua Affinity.
+  - Digging tools: Efficiency, Fortune, Unbreaking, Mending.
+- Every enchantment is applied at whatever maximum level the server reports, rather than a
+  hardcoded number, so a datapack that raises a cap is respected.
+
+
 ## v1.0.0
 
 First release. An all-in-one essentials suite for Paper 1.21.x with **53 features**, each of

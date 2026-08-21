@@ -68,7 +68,7 @@ turn them on deliberately.
 | **Durability** | `/durability` | `scriptedessentials.durability` | Sets the held item's remaining durability to an exact percentage. |
 | **Feed** | `/feed` | `scriptedessentials.feed` | Refills a player's hunger and saturation. |
 | **Fly** | `/fly`, `/flyspeed` | `scriptedessentials.fly` | Toggles flight, with fall damage protection on landing and a speed control. |
-| **Full Tools** | `/fulltools` | `scriptedessentials.fulltools` | Gives a fully enchanted, unbreakable netherite tool and armour set. |
+| **Full Tools** | `/fulltools [tier] [player]` | `scriptedessentials.fulltools` | Gives a fully enchanted tool and armour set in any material tier, with enchantments picked for PvP. |
 | **Gamemodes** | `/gm`, `/gmc`, `/gms`, `/gma`, `/gmsp` | `scriptedessentials.gamemode` | Switch game mode, with a shorthand command for each mode. |
 | **Heal** | `/heal` | `scriptedessentials.heal` | Restores health and hunger, puts out fire and clears potion effects. |
 | **Hunger** | `/hunger` | `scriptedessentials.hunger` | Sets a player's hunger bar to an exact value between 0 and 20. |
