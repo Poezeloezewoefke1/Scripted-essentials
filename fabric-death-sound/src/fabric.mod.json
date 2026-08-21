@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "scripteddeathsound",
+  "version": "1.0.0",
+  "name": "Scripted Death Sound",
+  "description": "Replaces the player death sound (entity.player.death) with a custom sound. Every other sound in the game is left exactly as it is.",
+  "authors": ["Poezeloezewoefke1"],
+  "contact": {
+    "sources": "https://github.com/Poezeloezewoefke1/Scripted-essentials"
+  },
+  "license": "MIT",
+  "icon": "assets/scripteddeathsound/icon.png",
+  "environment": "client",
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-resource-loader-v0": "*",
+    "minecraft": ">=1.21"
+  }
+}

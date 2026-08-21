@@ -1,0 +1,12 @@
+{
+  "entity.player.death": {
+    "replace": true,
+    "subtitle": "subtitles.entity.player.death",
+    "sounds": [
+      {
+        "name": "scripteddeathsound:player_death",
+        "stream": false
+      }
+    ]
+  }
+}

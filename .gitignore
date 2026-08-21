@@ -11,3 +11,6 @@ out/
 .project
 tools/apicheck/build/
 tools/apicheck/lib/
+
+# The Fabric mod is resources only; its built jar is the deliverable.
+!fabric-death-sound/dist/*.jar
