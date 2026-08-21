@@ -34,7 +34,8 @@ The jar lands in `target/ScriptedEssentials-1.0.0.jar`. Drop it in `plugins/` an
 server; `config.yml`, `messages.yml`, `features.yml` and a `data/` folder are created on first run.
 
 > The build resolves `io.papermc.paper:paper-api` from `repo.papermc.io`, so that host has to be
-> reachable from wherever you build.
+> reachable from wherever you build. If it is blocked on your network, `tools/build-from-source.sh`
+> produces the same jar by compiling against Paper's API sources from GitHub instead.
 
 ## The control panel
 

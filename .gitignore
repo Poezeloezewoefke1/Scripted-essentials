@@ -11,3 +11,4 @@ out/
 .project
 tools/apicheck/build/
 tools/apicheck/lib/
+.build-from-source/

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!--
+      The dependencies paper-api itself declares, mirrored from its build.gradle.kts.
+      Used only by tools/build-from-source.sh; the normal `mvn package` build never reads this.
+    -->
+    <groupId>local</groupId><artifactId>paperapi-deps</artifactId><version>1</version>
+    <packaging>pom</packaging>
+    <properties><adv>4.18.0</adv></properties>
+    <dependencies>
+        <dependency><groupId>com.google.guava</groupId><artifactId>guava</artifactId><version>33.3.1-jre</version></dependency>
+        <dependency><groupId>com.google.code.gson</groupId><artifactId>gson</artifactId><version>2.11.0</version></dependency>
+        <dependency><groupId>org.yaml</groupId><artifactId>snakeyaml</artifactId><version>2.2</version></dependency>
+        <dependency><groupId>org.joml</groupId><artifactId>joml</artifactId><version>1.10.8</version></dependency>
+        <dependency><groupId>com.googlecode.json-simple</groupId><artifactId>json-simple</artifactId><version>1.1.1</version>
+            <exclusions><exclusion><groupId>junit</groupId><artifactId>junit</artifactId></exclusion></exclusions></dependency>
+        <dependency><groupId>it.unimi.dsi</groupId><artifactId>fastutil</artifactId><version>8.5.15</version></dependency>
+        <dependency><groupId>org.apache.logging.log4j</groupId><artifactId>log4j-api</artifactId><version>2.24.1</version></dependency>
+        <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>2.0.16</version></dependency>
+        <dependency><groupId>net.md-5</groupId><artifactId>bungeecord-chat</artifactId><version>1.21-R0.4</version></dependency>
+        <dependency><groupId>net.kyori</groupId><artifactId>adventure-api</artifactId><version>${adv}</version></dependency>
+        <dependency><groupId>net.kyori</groupId><artifactId>adventure-text-minimessage</artifactId><version>${adv}</version></dependency>
+        <dependency><groupId>net.kyori</groupId><artifactId>adventure-text-serializer-gson</artifactId><version>${adv}</version></dependency>
+        <dependency><groupId>net.kyori</groupId><artifactId>adventure-text-serializer-legacy</artifactId><version>${adv}</version></dependency>
+        <dependency><groupId>net.kyori</groupId><artifactId>adventure-text-serializer-plain</artifactId><version>${adv}</version></dependency>
+        <dependency><groupId>net.kyori</groupId><artifactId>adventure-text-logger-slf4j</artifactId><version>${adv}</version></dependency>
+        <dependency><groupId>org.apache.maven</groupId><artifactId>maven-resolver-provider</artifactId><version>3.9.6</version></dependency>
+        <dependency><groupId>org.jetbrains</groupId><artifactId>annotations</artifactId><version>24.1.0</version></dependency>
+        <dependency><groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId><version>3.33.0</version></dependency>
+        <dependency><groupId>org.jspecify</groupId><artifactId>jspecify</artifactId><version>1.0.0</version></dependency>
+        <dependency><groupId>org.apache.maven.resolver</groupId><artifactId>maven-resolver-connector-basic</artifactId><version>1.9.18</version></dependency>
+        <dependency><groupId>org.apache.maven.resolver</groupId><artifactId>maven-resolver-transport-http</artifactId><version>1.9.18</version></dependency>
+    </dependencies>
+</project>

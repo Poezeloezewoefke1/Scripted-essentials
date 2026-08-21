@@ -40,7 +40,10 @@ public final class ChatPrompt implements Listener {
         pending.put(player.getUniqueId(), onInput);
         // Deferred a tick: await() is normally reached from a menu click, and closing an
         // inventory inside that event fights the client's in-progress transaction.
-        plugin.getServer().getScheduler().runTask(plugin, player::closeInventory);
+        // An explicit lambda, not a method reference: closeInventory() is overloaded, which
+        // makes the reference inexact and ambiguous between the scheduler's Runnable and
+        // Consumer<BukkitTask> overloads.
+        plugin.getServer().getScheduler().runTask(plugin, () -> player.closeInventory());
         plugin.messages().send(player, promptMessageKey);
         plugin.messages().send(player, "prompt-cancel-hint");
     }
