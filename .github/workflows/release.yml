@@ -1,0 +1,72 @@
+name: Release
+
+# Publishes a tagged release with the built plugin jar attached.
+#
+# Runs on GitHub's runners, which can reach repo.papermc.io, so this builds against the real
+# paper-api exactly as `mvn package` does locally.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, without the leading v (e.g. 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build
+        run: mvn -B package
+
+      - name: Verify the jar
+        run: |
+          JAR="target/ScriptedEssentials-${{ inputs.version }}.jar"
+          test -f "$JAR" || { echo "::error::$JAR was not produced"; exit 1; }
+          # The jar must contain only this plugin; shipping API classes would shadow the
+          # server's own copies.
+          if unzip -l "$JAR" | awk '{print $4}' | grep -qE '^(org|io|com|net)/'; then
+            echo "::error::the jar contains classes outside dev/scripted/essentials"
+            exit 1
+          fi
+          echo "$JAR is $(du -h "$JAR" | cut -f1)"
+          sha256sum "$JAR"
+
+      - name: Write the release notes
+        run: |
+          # Everything under the "## v<version>" heading in the changelog.
+          awk -v ver="## v${{ inputs.version }}" '
+            $0 == ver { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+          test -s RELEASE_NOTES.md || echo "See CHANGELOG.md." > RELEASE_NOTES.md
+          cat RELEASE_NOTES.md
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ inputs.version }}" \
+            --target "${{ github.sha }}" \
+            --title "ScriptedEssentials v${{ inputs.version }}" \
+            --notes-file RELEASE_NOTES.md \
+            "target/ScriptedEssentials-${{ inputs.version }}.jar"
+          gh release view "v${{ inputs.version }}" --json tagName,url,assets
