@@ -2,7 +2,7 @@
 #
 # Fallback build for environments that cannot reach repo.papermc.io.
 #
-# `mvn package` is the normal way to build this plugin and you should use it. This script exists
+# `./gradlew build` is the normal way to build this plugin and you should use it. This script exists
 # for networks where the Paper Maven repository is blocked but GitHub and Maven Central are not:
 # it compiles against Paper's API *sources* from GitHub instead of the published paper-api jar,
 # and produces the same jar.
@@ -16,7 +16,7 @@ export JAVA_TOOL_OPTIONS=""
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WORK="${BUILD_WORK_DIR:-$ROOT/.build-from-source}"
 PAPER_BRANCH="${PAPER_BRANCH:-ver/1.21.4}"
-VERSION="$(sed -n 's|.*<version>\(1\.[^<]*\)</version>.*|\1|p' "$ROOT/pom.xml" | head -1)"
+VERSION="$(sed -n 's|^version=||p' "$ROOT/gradle.properties" | head -1)"
 
 mkdir -p "$WORK"
 
@@ -41,7 +41,7 @@ CLASSES="$WORK/classes"
 rm -rf "$CLASSES"
 mkdir -p "$CLASSES"
 CP="$(find "$WORK/lib" -name '*.jar' | tr '\n' ':')"
-find "$ROOT/src/main/java" -name '*.java' > "$WORK/sources.txt"
+find "$ROOT/core/src/main/java" "$ROOT/bukkit/src/main/java" -name '*.java' > "$WORK/sources.txt"
 javac -nowarn -proc:none --release 21 \
       -d "$CLASSES" -cp "$CP" \
       -sourcepath "$WORK/Paper/paper-api/src/main/java:$WORK/brigadier/src/main/java" \
@@ -54,8 +54,8 @@ mkdir -p "$STAGE"
 # Only this plugin's classes. javac also writes the API classes it had to compile from source
 # into the output directory; shipping those would shadow the server's own copies.
 cp -r "$CLASSES/dev" "$STAGE/"
-cp "$ROOT/src/main/resources/config.yml" "$ROOT/src/main/resources/messages.yml" "$STAGE/"
-sed "s|\${project\.version}|$VERSION|" "$ROOT/src/main/resources/plugin.yml" > "$STAGE/plugin.yml"
+cp "$ROOT/bukkit/src/main/resources/config.yml" "$ROOT/bukkit/src/main/resources/messages.yml" "$STAGE/"
+sed "s|\${version}|$VERSION|" "$ROOT/bukkit/src/main/resources/plugin.yml" > "$STAGE/plugin.yml"
 
 mkdir -p "$ROOT/target"
 JAR="$ROOT/target/ScriptedEssentials-$VERSION.jar"

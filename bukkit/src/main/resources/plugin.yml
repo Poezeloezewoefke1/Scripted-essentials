@@ -1,5 +1,5 @@
 name: ScriptedEssentials
-version: '${project.version}'
+version: '${version}'
 main: dev.scripted.essentials.ScriptedEssentials
 api-version: '1.21'
 description: An all-in-one essentials suite with a toggle for every feature.

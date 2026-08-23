@@ -31,14 +31,16 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build
-        run: mvn -B package
+        run: ./gradlew build --stacktrace
 
       - name: Verify the jar
         run: |
-          JAR="target/ScriptedEssentials-${{ inputs.version }}.jar"
+          JAR="bukkit/build/libs/ScriptedEssentials-Paper-${{ inputs.version }}.jar"
           test -f "$JAR" || { echo "::error::$JAR was not produced"; exit 1; }
           # The jar must contain only this plugin; shipping API classes would shadow the
           # server's own copies.
@@ -68,5 +70,5 @@ jobs:
             --target "${{ github.sha }}" \
             --title "ScriptedEssentials v${{ inputs.version }}" \
             --notes-file RELEASE_NOTES.md \
-            "target/ScriptedEssentials-${{ inputs.version }}.jar"
+            "bukkit/build/libs/ScriptedEssentials-Paper-${{ inputs.version }}.jar"
           gh release view "v${{ inputs.version }}" --json tagName,url,assets
