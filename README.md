@@ -4,7 +4,7 @@ An all-in-one essentials suite for Paper servers. Every piece of behaviour is a 
 can be switched on or off at runtime from a single in-game control panel — no restart, no config
 editing, no reload.
 
-**53 features**, one toggle each.
+**52 features**, one toggle each.
 
 ```
 /se
@@ -130,7 +130,6 @@ turn them on deliberately.
 | **Clear Chat** | `/clearchat` | `scriptedessentials.clearchat` | Wipes the chat window for everyone without the bypass permission. |
 | **Command Feedback** *(off by default)* | — | `scriptedessentials.commandfeedback` | Reports staff command use to other staff and to the console. |
 | **Feedback Sounds** | — | `scriptedessentials.feedbacksounds` | Plays a short sound when a menu button or command succeeds. |
-| **Join & Leave Messages** | — | `scriptedessentials.joinleavemessages` | Custom join, first-join and leave broadcasts. |
 | **Private Messages** | `/msg`, `/r`, `/msgtoggle` | `scriptedessentials.privatemessages` | Direct messages with a reply command and an opt-out toggle. |
 | **Team Chat** | `/tc` | `scriptedessentials.teamchat` | A private chat channel for each team, with a latching toggle. |
 | **Voice Chat Mute** | `/vcmute`, `/vcunmute` | `scriptedessentials.voicechatmute` | Mutes a player in voice chat by revoking their speak permission. |

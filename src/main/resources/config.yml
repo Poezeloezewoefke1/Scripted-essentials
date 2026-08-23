@@ -41,11 +41,6 @@ chat-filter:
   # Minimum seconds between two chat messages from the same player. 0 disables the cooldown.
   cooldown-seconds: 0
 
-join-leave-messages:
-  join: '<dark_gray>[<green>+</green>] <gray><player>'
-  leave: '<dark_gray>[<red>-</red>] <gray><player>'
-  first-join: '<gold>Welcome <player> to the server!'
-
 auto-clear:
   # Minutes between ground-item sweeps.
   interval-minutes: 10
