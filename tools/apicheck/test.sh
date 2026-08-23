@@ -19,7 +19,7 @@ LIB="$ROOT/tools/apicheck/lib"
 mkdir -p "$OUT/test-classes"
 CP="$(find "$LIB" -name '*.jar' | tr '\n' ':')$OUT/classes"
 
-find "$ROOT/src/test/java" -name '*.java' > "$OUT/test-sources.txt"
+find "$ROOT/core/src/test/java" -name '*.java' > "$OUT/test-sources.txt"
 javac -nowarn -proc:none -d "$OUT/test-classes" -cp "$CP" @"$OUT/test-sources.txt"
 
 java -jar "$(find "$LIB" -name 'junit-platform-console-standalone-*.jar' | head -1)" \

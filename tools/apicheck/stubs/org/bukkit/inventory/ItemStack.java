@@ -23,5 +23,7 @@ public class ItemStack implements Cloneable {
     public Map<Enchantment, Integer> getEnchantments() { throw new UnsupportedOperationException(); }
     public boolean containsEnchantment(Enchantment enchantment) { throw new UnsupportedOperationException(); }
     public boolean isSimilar(ItemStack other) { throw new UnsupportedOperationException(); }
+    public byte[] serializeAsBytes() { throw new UnsupportedOperationException(); }
+    public static ItemStack deserializeBytes(byte[] bytes) { throw new UnsupportedOperationException(); }
     @Override public ItemStack clone() { throw new UnsupportedOperationException(); }
 }

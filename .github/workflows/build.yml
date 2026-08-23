@@ -1,0 +1,37 @@
+name: Build
+
+# Builds every module on each push.
+#
+# This matters more than usual for this project: the Fabric module cannot be compiled in the
+# environment it is developed in, because maven.fabricmc.net and Mojang's library host are not
+# reachable there. CI is where the Fabric side actually gets verified.
+
+on:
+  push:
+    branches: ['main', 'claude/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build and test
+        run: ./gradlew build --stacktrace
+
+      - name: Show what was produced
+        run: find . -name '*.jar' -path '*/build/libs/*' -printf '%p  %s bytes\n'

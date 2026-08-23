@@ -17,8 +17,9 @@ import sys
 from collections import Counter
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC = ROOT / "src/main/java"
-RES = ROOT / "src/main/resources"
+SRC = ROOT / "bukkit/src/main/java"
+CORE = ROOT / "core/src/main/java"
+RES = ROOT / "bukkit/src/main/resources"
 
 problems: list[str] = []
 notes: list[str] = []
@@ -29,7 +30,9 @@ def fail(message: str) -> None:
 
 
 def java_sources() -> dict[pathlib.Path, str]:
-    return {p: p.read_text() for p in SRC.rglob("*.java")}
+    sources = {p: p.read_text() for p in SRC.rglob("*.java")}
+    sources.update({p: p.read_text() for p in CORE.rglob("*.java")})
+    return sources
 
 
 SOURCES = java_sources()

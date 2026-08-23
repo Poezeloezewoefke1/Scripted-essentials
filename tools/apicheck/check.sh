@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Type-checks src/main/java against the local API stubs.
+# Type-checks core and bukkit sources against the local API stubs.
 #
 # This is a development aid, not the build. The real build is `mvn package`, which compiles
 # against the actual paper-api. Use this when the Paper repository is unreachable.
@@ -24,7 +24,7 @@ fi
 
 CP="$(find "$LIB" -name '*.jar' | tr '\n' ':')"
 
-find "$ROOT/src/main/java" "$ROOT/tools/apicheck/stubs" -name '*.java' > "$OUT/sources.txt"
+find "$ROOT/core/src/main/java" "$ROOT/bukkit/src/main/java" "$ROOT/tools/apicheck/stubs" -name '*.java' > "$OUT/sources.txt"
 
 javac -nowarn -proc:none \
       -d "$OUT/classes" \
