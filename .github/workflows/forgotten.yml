@@ -45,13 +45,24 @@ jobs:
           curl -fsS https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml | grep -o '0\.[0-9.]*+1\.21\.11' | tail -3 || true
 
       - name: Unit tests (logic module)
-        run: ./gradlew :logic:test --stacktrace
+        # skipMinecraft keeps Loom out of this step so these tests run even if the mod cannot.
+        run: ./gradlew -PskipMinecraft=true :logic:test 2>&1 | tee ../logic.log; exit ${PIPESTATUS[0]}
 
       - name: Compile and package the mod
-        run: ./gradlew :mod:build --stacktrace
+        run: ./gradlew :mod:build 2>&1 | tee ../mod-build.log; exit ${PIPESTATUS[0]}
 
       - name: Game tests on a dedicated server
-        run: ./gradlew :mod:runGametest --stacktrace
+        run: ./gradlew :mod:runGametest 2>&1 | tee ../gametest.log; exit ${PIPESTATUS[0]}
+
+      - name: Summarise the failure
+        if: failure()
+        working-directory: .
+        run: |
+          for f in logic.log mod-build.log gametest.log; do
+            [ -f "$f" ] || continue
+            echo "===== $f"
+            grep -E "error:|warning: \[removal\]|FAILED|Exception|Caused by|What went wrong" -A3 "$f" | grep -v "^\s*at " | head -150
+          done
 
       - name: Upload test reports
         if: always()
