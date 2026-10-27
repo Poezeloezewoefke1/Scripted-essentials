@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.the_crash.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.the_crash.description"
+    },
+    "icon": {
+      "id": "forgotten:crash_core"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:something_is_wrong"
+}

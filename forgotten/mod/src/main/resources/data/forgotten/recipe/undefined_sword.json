@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "N",
+    "N",
+    "S"
+  ],
+  "key": {
+    "N": "forgotten:null_shard",
+    "S": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "id": "forgotten:undefined_sword",
+    "count": 1
+  }
+}

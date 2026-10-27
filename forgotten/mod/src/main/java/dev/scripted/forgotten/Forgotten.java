@@ -34,6 +34,7 @@ public final class Forgotten implements ModInitializer {
         ModBlocks.init();
         ModItems.init();
         ModBlockEntities.init();
+        dev.scripted.forgotten.registry.ModEntities.init();
         ModItemGroups.init();
         ParadoxRecipes.init();
         Hooks.init();

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:fermented_spider_eye",
+    "minecraft:chorus_fruit",
+    "minecraft:glowstone_dust"
+  ],
+  "result": {
+    "id": "forgotten:dna_strand",
+    "count": 2
+  }
+}

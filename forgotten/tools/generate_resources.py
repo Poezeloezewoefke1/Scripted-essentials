@@ -80,6 +80,30 @@ ITEMS = {
                 lambda: T.block_icon(22, '#6d7a8a')),
     'silicon_wafer': ('Silicon Wafer', 'The medium a Compiler Chest writes programs onto.',
                       lambda: T.chip(23)),
+    'one_gravity': ('One (1) Gravity', 'Bought from the Draft. Use it and you have exactly one gravity again. Usually.',
+                    lambda: T.orb(24, '#c0c0c0', glyph=24)),
+    'dna_strand': ('DNA Strand', 'Use on a passive creature to splice it into a Bio-Node: its instincts are cut away and it waits for code.',
+                   lambda: T.key(25, '#7dff9a')),
+    'cartridge': ('Cartridge', 'A compiled program. Use it on a Bio-Node to load it.',
+                  lambda: T.cartridge(26, '#2d6a3e')),
+    'infinite_loop': ('Infinite Loop', 'A program that never lets time pass. Nothing can run it. Something might open for it.',
+                      lambda: T.cartridge(27, '#5b2d8a', label='#ff6af0')),
+    'breakpoint_wand': ('Breakpoint Wand', 'Use to pause everything nearby. Use on paused things to read their values; crouch-use to change them.',
+                        lambda: T.stick_tool(28, '#ff4040', head_shape='gem')),
+    'git_reset': ('Git Reset Tool', 'Crouch-use to commit this chunk. Use later to roll it back to the commit, for 30 levels.',
+                  lambda: T.stick_tool(29, '#f05033', head_shape='fork')),
+    'glitch_grenade': ('Glitch Grenade', 'Throw it. Creatures swap minds, blocks swap places, players\' controls invert.',
+                       lambda: T.glitch_item(30)),
+    'editor': ('The Editor', 'Hold a declaration in your other hand - a block, a chest, a slime ball - and point at what should change. It lasts a minute.',
+               lambda: T.stick_tool(31, '#ffe066', head_shape='needle')),
+    'crash_core': ('Crash Core', 'Set it into ground already at Fragmentation. Unmakes a five-by-five chunk region, permanently.',
+                   lambda: T.orb(32, '#ff2a6a', glyph=32)),
+    'null_shard': ('Null Shard', 'A Null Material. It exists, but it should not. Found only where integrity is zero.',
+                   lambda: T.shard(33, '#120018')),
+    'undefined_sword': ('Undefined Sword', 'Deals undefined damage: somewhere between nothing and far too much.',
+                        lambda: T.sword(34, '#ff00ff')),
+    'nan_chestplate': ('NaN Chestplate', 'Its protection is not a number. Some hits do not resolve at all.',
+                       lambda: T.chestplate(35, '#ff00ff')),
 }
 for cid, (color, name) in CONCEPTS.items():
     ITEMS['concept_' + cid] = ('Concept: ' + name, '', (lambda c=color, s=sum(map(ord, cid)): T.orb(s, c, glyph=s)))
@@ -131,6 +155,10 @@ BLOCKS = {
                        model='cube', all=lambda: T.circuit(118), loot='self', tools=['pickaxe']),
     'memory_block': dict(name='Memory Block', desc='A block of the Stack: memory nobody is reading.',
                          model='cube', all=lambda: T.circuit(119, '#050508', '#1f3a2a'), loot='self', tools=['pickaxe']),
+    'compiler_chest': dict(name='Compiler Chest', desc='Lay items out one instruction per row, a wafer in the last slot, and close it. It compiles.',
+                           model='cube_bottom_top', top=lambda: T.circuit(120, '#1a1e24', '#39ff6a'),
+                           side=lambda: T.rune_block(121, '#2b2f3a', '#39ff6a'), bottom=lambda: T.noise_block(122, '#2b2f3a'),
+                           loot='self', tools=['pickaxe']),
 }
 
 # --------------------------------------------------------------------------- recipes
@@ -145,6 +173,19 @@ SHAPED = {
     'stitcher': (['C', 'I', 'S'], {'C': 'forgotten:coherence_shard', 'I': 'minecraft:iron_ingot', 'S': 'minecraft:stick'}, 1),
     'destabilizer': (['P', 'I', 'S'], {'P': 'forgotten:paradox_fragment', 'I': 'minecraft:iron_ingot', 'S': 'minecraft:stick'}, 1),
     'silicon_wafer': (['SSS', 'RAR'], {'S': 'forgotten:silicon', 'R': 'minecraft:redstone', 'A': 'minecraft:amethyst_shard'}, 3),
+    'compiler_chest': (['WRW', 'ECE', 'WAW'], {'W': 'forgotten:silicon_wafer', 'R': 'minecraft:redstone_block', 'E': 'minecraft:echo_shard',
+                                                'C': 'minecraft:chest', 'A': 'minecraft:amethyst_block'}, 1),
+    'breakpoint_wand': (['C', 'R', 'S'], {'C': 'minecraft:clock', 'R': 'minecraft:redstone_torch', 'S': 'minecraft:blaze_rod'}, 1),
+    'git_reset': (['WEW', ' B ', ' S '], {'W': 'forgotten:silicon_wafer', 'E': 'minecraft:ender_eye', 'B': 'minecraft:book',
+                                         'S': 'minecraft:stick'}, 1),
+    'glitch_grenade': ([' E ', 'EPE', ' G '], {'E': 'forgotten:entropy_shard', 'P': 'forgotten:paradox_fragment',
+                                               'G': 'minecraft:gunpowder'}, 4),
+    'editor': (['EQE', ' R ', ' S '], {'E': 'forgotten:entropy_shard', 'Q': 'minecraft:writable_book', 'R': 'minecraft:redstone',
+                                      'S': 'minecraft:stick'}, 1),
+    'crash_core': (['EUE', 'UNU', 'EUE'], {'E': 'forgotten:entropy_shard', 'U': 'forgotten:unwritten_fragment',
+                                          'N': 'minecraft:nether_star'}, 1),
+    'undefined_sword': (['N', 'N', 'S'], {'N': 'forgotten:null_shard', 'S': 'minecraft:netherite_ingot'}, 1),
+    'nan_chestplate': (['N N', 'NIN', 'NNN'], {'N': 'forgotten:null_shard', 'I': 'minecraft:netherite_ingot'}, 1),
 }
 SHAPELESS = {
     'architect_codex': (['minecraft:book', 'minecraft:amethyst_shard', 'minecraft:compass'], 1),
@@ -153,6 +194,7 @@ SHAPELESS = {
     'entropy_shard': (['forgotten:paradox_fragment', 'minecraft:gunpowder', 'minecraft:redstone'], 2),
     'paradox_fragment': (['forgotten:unremembered_thing'] * 4, 1),
     'lullaby': (['forgotten:lullaby_shard', 'forgotten:lullaby_shard', 'minecraft:note_block'], 1),
+    'dna_strand': (['minecraft:fermented_spider_eye', 'minecraft:chorus_fruit', 'minecraft:glowstone_dust'], 2),
 }
 BLASTING = {
     'silicon': ('minecraft:sand', 0.2, 100),
@@ -207,11 +249,15 @@ ADVANCEMENTS = {
     'rank_3': ('Rewriter', 'Reach Architect rank 3.', 'forgotten:rule_scroll', 'rank_2'),
     'rank_4': ('Architect', 'Reach Architect rank 4.', 'forgotten:reality_anchor', 'rank_3'),
     'rank_5': ('Paradox Lord', 'Reach Architect rank 5.', 'forgotten:singularity', 'rank_4'),
+    'infinite_loop': ('while (true)', 'Compile a program that never lets time pass.', 'forgotten:infinite_loop', 'something_is_wrong'),
+    'the_crash': ('Segmentation Fault', 'Unmake a region with the Crash.', 'forgotten:crash_core', 'something_is_wrong'),
 }
 
 LANG_EXTRA = {
     'itemGroup.forgotten': 'The World That Forgot Itself',
     'container.forgotten.paradox_engine': 'Paradox Engine',
+    'container.forgotten.compiler_chest': 'Compiler Chest',
+    'entity.forgotten.glitch_grenade': 'Glitch Grenade',
     'item.forgotten.memory.of': 'Memory of %s',
     'item.forgotten.folded_memory.of': 'Folded Memory of %s %s',
     'memory.forgotten.sky': 'the Sky',

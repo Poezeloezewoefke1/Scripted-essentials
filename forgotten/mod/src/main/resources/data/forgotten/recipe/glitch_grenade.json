@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " E ",
+    "EPE",
+    " G "
+  ],
+  "key": {
+    "E": "forgotten:entropy_shard",
+    "P": "forgotten:paradox_fragment",
+    "G": "minecraft:gunpowder"
+  },
+  "result": {
+    "id": "forgotten:glitch_grenade",
+    "count": 4
+  }
+}

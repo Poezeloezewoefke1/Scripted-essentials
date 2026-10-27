@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "WEW",
+    " B ",
+    " S "
+  ],
+  "key": {
+    "W": "forgotten:silicon_wafer",
+    "E": "minecraft:ender_eye",
+    "B": "minecraft:book",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "forgotten:git_reset",
+    "count": 1
+  }
+}

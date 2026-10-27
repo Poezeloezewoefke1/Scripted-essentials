@@ -32,6 +32,9 @@ public final class ModAttachments {
     /** A Bio-Node's item buffer, as "item_id*count;..." and its owner's UUID. */
     public static final AttachmentType<String> BIO_BUFFER = AttachmentRegistry.create(Forgotten.id("bio_buffer"),
             b -> b.persistent(Codec.STRING));
+    /** Where a Bio-Node was given its program: the place its HOME target walks back to. */
+    public static final AttachmentType<Long> BIO_HOME = AttachmentRegistry.create(Forgotten.id("bio_home"),
+            b -> b.persistent(Codec.LONG).copyOnDeath());
     public static final AttachmentType<String> OWNER = AttachmentRegistry.create(Forgotten.id("owner"),
             b -> b.persistent(Codec.STRING).copyOnDeath());
 

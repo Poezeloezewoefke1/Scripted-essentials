@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "C",
+    "R",
+    "S"
+  ],
+  "key": {
+    "C": "minecraft:clock",
+    "R": "minecraft:redstone_torch",
+    "S": "minecraft:blaze_rod"
+  },
+  "result": {
+    "id": "forgotten:breakpoint_wand",
+    "count": 1
+  }
+}

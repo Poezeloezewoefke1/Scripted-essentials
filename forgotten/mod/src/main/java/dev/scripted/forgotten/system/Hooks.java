@@ -71,6 +71,7 @@ public final class Hooks {
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             if (world instanceof ServerWorld server && player instanceof ServerPlayerEntity sp) {
                 broken(server, sp, pos.toImmutable(), state);
+                Unraveling.nullDrop(server, pos.toImmutable(), false);
             }
         });
         UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
@@ -83,6 +84,8 @@ public final class Hooks {
             return ActionResult.PASS;
         });
         ServerLivingEntityEvents.ALLOW_DEATH.register(Hooks::allowDeath);
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
+                SunDogs.allowDamage(entity, source, amount) && Hooks.notANumber(entity, source));
         ServerLivingEntityEvents.AFTER_DEATH.register(Hooks::died);
         EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
             if (entity instanceof ServerPlayerEntity player) {
@@ -92,6 +95,8 @@ public final class Hooks {
         ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
             Glitches.track(entity);
             Puppets.adopt(entity);
+            BioNodes.track(entity);
+            SunDogs.adopt(entity);
             if (entity.getCommandTags().contains(dev.scripted.forgotten.util.Displays.TAG)
                     && !dev.scripted.forgotten.util.Displays.LIVE.contains(entity.getUuid())) {
                 // Displays are never meant to outlive the moment that made them.
@@ -100,6 +105,8 @@ public final class Hooks {
         });
         ServerEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
             Glitches.untrack(entity);
+            BioNodes.untrack(entity);
+            Unraveling.forgetChest(entity);
             if (entity instanceof ItemEntity item && entity.getRemovalReason() == Entity.RemovalReason.KILLED) {
                 ItemStack stack = item.getStack();
                 if (!stack.isEmpty() && (stack.getRarity().ordinal() > 0 || stack.hasEnchantments() || stack.getCount() >= 16)) {
@@ -119,6 +126,9 @@ public final class Hooks {
             ObserverDirector.clear();
             Puppets.clear();
             FirstSigns.reset();
+            BioNodes.clear();
+            Unraveling.clear();
+            SunDogs.clear();
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ForgottenCommand.register(dispatcher));
     }
@@ -172,6 +182,21 @@ public final class Hooks {
         return trail == null || trail.isEmpty() ? player.getEntityPos() : trail.peekFirst();
     }
 
+    /** NaN protection: about two hits in five resolve to not-a-number and do not happen. */
+    static boolean notANumber(LivingEntity entity, DamageSource source) {
+        if (!entity.getEquippedStack(net.minecraft.entity.EquipmentSlot.CHEST).isOf(dev.scripted.forgotten.registry.ModItems.NAN_CHESTPLATE)
+                || source.isIn(net.minecraft.registry.tag.DamageTypeTags.BYPASSES_INVULNERABILITY)
+                || !(entity.getEntityWorld() instanceof ServerWorld world)) {
+            return true;
+        }
+        if (world.getRandom().nextInt(5) < 2) {
+            world.spawnParticles(net.minecraft.particle.ParticleTypes.ENCHANTED_HIT, entity.getX(), entity.getBodyY(0.6), entity.getZ(),
+                    8, 0.3, 0.4, 0.3, 0.2);
+            return false;
+        }
+        return true;
+    }
+
     static boolean allowDeath(LivingEntity entity, DamageSource source, float amount) {
         if (!(entity instanceof ServerPlayerEntity player)) {
             return true;
@@ -199,6 +224,9 @@ public final class Hooks {
         }
         Puppets.onDeath(entity, source);
         BlockPos pos = entity.getBlockPos();
+        if (!(entity instanceof ServerPlayerEntity)) {
+            Unraveling.nullDrop(world, pos, true);
+        }
         if (entity instanceof ServerPlayerEntity player) {
             PlayerMemory memory = Reality.player(player);
             memory.deaths++;

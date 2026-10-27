@@ -38,6 +38,8 @@ public final class RegionMemory extends PersistentState {
     /** Anchor block position -> radius in chunks. */
     private final Long2IntOpenHashMap anchors = new Long2IntOpenHashMap();
     private final LongOpenHashSet quiet = new LongOpenHashSet();
+    /** Chunks unmade by the Crash. They stay at zero; nothing can anchor them back. */
+    private final LongOpenHashSet crashed = new LongOpenHashSet();
     private final LongOpenHashSet eaters = new LongOpenHashSet();
 
     public static RegionMemory get(ServerWorld world) {
@@ -60,6 +62,9 @@ public final class RegionMemory extends PersistentState {
     // ---- integrity ----
 
     public int integrity(ServerWorld world, long chunkKey) {
+        if (crashed.contains(chunkKey)) {
+            return 0;
+        }
         ChunkRecord r = chunks.get(chunkKey);
         if (r != null && r.integrity >= 0) {
             return r.integrity;
@@ -127,6 +132,18 @@ public final class RegionMemory extends PersistentState {
 
     public int anchorCount() {
         return anchors.size();
+    }
+
+    // ---- the Crash ----
+
+    public void crash(long chunkKey) {
+        if (crashed.add(chunkKey)) {
+            setIntegrity(chunkKey, 0);
+        }
+    }
+
+    public boolean crashed(long chunkKey) {
+        return crashed.contains(chunkKey);
     }
 
     // ---- quiet and eaters ----
@@ -259,6 +276,7 @@ public final class RegionMemory extends PersistentState {
         }
         nbt.put("anchors", anchorList);
         nbt.putLongArray("quiet", quiet.toLongArray());
+        nbt.putLongArray("crashed", crashed.toLongArray());
         nbt.putLongArray("eaters", eaters.toLongArray());
         return nbt;
     }
@@ -303,6 +321,11 @@ public final class RegionMemory extends PersistentState {
                 m.anchors.put(c.getLong("p", 0), c.getInt("r", 1));
             }
         }
+        nbt.getLongArray("crashed").ifPresent(a -> {
+            for (long l : a) {
+                m.crashed.add(l);
+            }
+        });
         nbt.getLongArray("quiet").ifPresent(a -> {
             for (long l : a) {
                 m.quiet.add(l);

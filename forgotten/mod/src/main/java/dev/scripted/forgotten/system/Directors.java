@@ -31,6 +31,9 @@ public final class Directors {
         long now = Reality.now(server);
         Glitches.tick(now);
         Puppets.tick(server);
+        BioNodes.tick(now);
+        Unraveling.tick(server, now);
+        SunDogs.tick(now);
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             Hooks.trail(player);
         }
@@ -54,6 +57,8 @@ public final class Directors {
                     Anomalies.roll(world, player);
                     WakingDirector.tick(world, player, now);
                     DebtDirector.tick(world, player, now);
+                    Draft.roll(world, player);
+                    SunDogs.roll(world, player);
                 }
                 Anomalies.thaw(world, now);
             }

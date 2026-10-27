@@ -1,6 +1,7 @@
 package dev.scripted.forgotten.registry;
 
 import dev.scripted.forgotten.Forgotten;
+import dev.scripted.forgotten.block.CompilerChestBlock;
 import dev.scripted.forgotten.block.IndexedBlock;
 import dev.scripted.forgotten.block.MarrowglassBlock;
 import dev.scripted.forgotten.block.NullBlock;
@@ -79,6 +80,9 @@ public final class ModBlocks {
             AbstractBlock.Settings.create().mapColor(MapColor.LIME).strength(2f).luminance(s -> 9));
     public static final Block MEMORY_BLOCK = block("memory_block", Block::new,
             AbstractBlock.Settings.create().mapColor(MapColor.BLACK).strength(2f));
+    public static final Block COMPILER_CHEST = block("compiler_chest", CompilerChestBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(3f, 6f).requiresTool()
+                    .luminance(s -> 3).sounds(BlockSoundGroup.COPPER));
 
     private ModBlocks() {
     }

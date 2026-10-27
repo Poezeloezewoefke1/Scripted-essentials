@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "EQE",
+    " R ",
+    " S "
+  ],
+  "key": {
+    "E": "forgotten:entropy_shard",
+    "Q": "minecraft:writable_book",
+    "R": "minecraft:redstone",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "forgotten:editor",
+    "count": 1
+  }
+}

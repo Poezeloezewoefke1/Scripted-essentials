@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "N N",
+    "NIN",
+    "NNN"
+  ],
+  "key": {
+    "N": "forgotten:null_shard",
+    "I": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "id": "forgotten:nan_chestplate",
+    "count": 1
+  }
+}

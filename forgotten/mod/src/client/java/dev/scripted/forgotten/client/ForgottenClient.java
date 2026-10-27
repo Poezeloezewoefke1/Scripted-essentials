@@ -1,9 +1,12 @@
 package dev.scripted.forgotten.client;
 
 import dev.scripted.forgotten.registry.ModBlocks;
+import dev.scripted.forgotten.registry.ModEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.render.entity.EntityRendererFactories;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 
 /**
  * Client side. Almost everything in the mod is decided on the server and drawn with vanilla
@@ -14,5 +17,6 @@ public final class ForgottenClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockRenderLayerMap.putBlock(ModBlocks.MARROWGLASS, BlockRenderLayer.TRANSLUCENT);
+        EntityRendererFactories.register(ModEntities.GLITCH_GRENADE, FlyingItemEntityRenderer::new);
     }
 }

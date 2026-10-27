@@ -32,7 +32,14 @@ public class SimpleUseItem extends LoreItem {
         /** Also from the Draft. It becomes Tuesday. */
         TUESDAY,
         /** Death does not apply to this player, for five minutes. The debt comes later. */
-        UNWRITTEN_DEATH
+        UNWRITTEN_DEATH,
+        /** From the Draft. Exactly one gravity: whatever has been done to your weight is undone. */
+        ONE_GRAVITY;
+
+        /** The Draft's goods: they do not always work, and when they fail they take something with them. */
+        boolean drafted() {
+            return this == BLOCK_OF_AIR || this == TUESDAY || this == ONE_GRAVITY;
+        }
     }
 
     private final Kind kind;
@@ -52,9 +59,27 @@ public class SimpleUseItem extends LoreItem {
         if (state.getHardness(world, pos) < 0) {
             return ActionResult.FAIL;
         }
+        if (context.getPlayer() instanceof ServerPlayerEntity player && misfired(player)) {
+            context.getStack().decrement(1);
+            return ActionResult.SUCCESS;
+        }
         world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         context.getStack().decrement(1);
         return ActionResult.SUCCESS;
+    }
+
+    /** One in four of the Draft's goods does nothing; one in eight corrupts your inventory instead. */
+    private static boolean misfired(ServerPlayerEntity player) {
+        int roll = player.getRandom().nextInt(8);
+        if (roll == 0) {
+            dev.scripted.forgotten.system.Draft.corrupt(player);
+            return true;
+        }
+        if (roll == 1) {
+            Texts.bar(player, Texts.world("Nothing happens. It was only ever a draft of the thing."));
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -63,6 +88,10 @@ public class SimpleUseItem extends LoreItem {
             return ActionResult.SUCCESS;
         }
         long now = Reality.now(server.getServer());
+        if (kind.drafted() && kind != Kind.BLOCK_OF_AIR && misfired(player)) {
+            user.getStackInHand(hand).decrement(1);
+            return ActionResult.SUCCESS;
+        }
         switch (kind) {
             case LULLABY -> {
                 WorldMemory memory = Reality.memory(server.getServer());
@@ -89,6 +118,15 @@ public class SimpleUseItem extends LoreItem {
                 Reality.debt(player, 40);
                 Texts.tell(player, Texts.discovery("DEATH DOES NOT APPLY TO THIS PLAYER."));
                 Texts.tell(player, Texts.world("For a while, the world will reject the events that would end you. It will remember each one."));
+            }
+            case ONE_GRAVITY -> {
+                var gravity = player.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GRAVITY);
+                if (gravity != null) {
+                    gravity.clearModifiers();
+                }
+                player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+                        net.minecraft.entity.effect.StatusEffects.SLOW_FALLING, 200, 0));
+                Texts.tell(player, Texts.world("You have exactly one gravity. Do not lose it."));
             }
             case BLOCK_OF_AIR -> {
                 return ActionResult.PASS;

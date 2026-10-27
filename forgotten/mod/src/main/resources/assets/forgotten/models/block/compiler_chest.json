@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "forgotten:block/compiler_chest_top",
+    "side": "forgotten:block/compiler_chest_side",
+    "bottom": "forgotten:block/compiler_chest_bottom"
+  }
+}

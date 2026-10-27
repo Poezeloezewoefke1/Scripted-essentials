@@ -1,7 +1,15 @@
 package dev.scripted.forgotten.registry;
 
 import dev.scripted.forgotten.Forgotten;
+import dev.scripted.forgotten.item.BreakpointWandItem;
+import dev.scripted.forgotten.item.CartridgeItem;
 import dev.scripted.forgotten.item.CodexItem;
+import dev.scripted.forgotten.item.CrashCoreItem;
+import dev.scripted.forgotten.item.DnaStrandItem;
+import dev.scripted.forgotten.item.EditorItem;
+import dev.scripted.forgotten.item.GitResetItem;
+import dev.scripted.forgotten.item.GlitchGrenadeItem;
+import dev.scripted.forgotten.item.UndefinedSwordItem;
 import dev.scripted.forgotten.item.ConceptItem;
 import dev.scripted.forgotten.item.DestabilizerItem;
 import dev.scripted.forgotten.item.FoldedMemoryItem;
@@ -15,6 +23,12 @@ import dev.scripted.forgotten.item.SimpleUseItem;
 import dev.scripted.forgotten.item.StitcherItem;
 import dev.scripted.forgotten.logic.concept.Concept;
 import net.minecraft.item.Item;
+import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.equipment.ArmorMaterial;
+import net.minecraft.item.equipment.EquipmentAssetKeys;
+import net.minecraft.item.equipment.EquipmentType;
+import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -63,9 +77,31 @@ public final class ModItems {
     public static final Item UNWRITTEN_DEATH = item("unwritten_death", s -> new SimpleUseItem(s, SimpleUseItem.Kind.UNWRITTEN_DEATH),
             new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
 
-    // ---- silicon ----
+    public static final Item ONE_GRAVITY = item("one_gravity", s -> new SimpleUseItem(s, SimpleUseItem.Kind.ONE_GRAVITY), new Item.Settings());
+
+    // ---- silicon and spores ----
     public static final Item SILICON = item("silicon", LoreItem::new, new Item.Settings());
     public static final Item SILICON_WAFER = item("silicon_wafer", LoreItem::new, new Item.Settings());
+    public static final Item DNA_STRAND = item("dna_strand", DnaStrandItem::new, new Item.Settings());
+    public static final Item CARTRIDGE = item("cartridge", s -> new CartridgeItem(s, false), new Item.Settings().maxCount(1));
+    public static final Item INFINITE_LOOP = item("infinite_loop", s -> new CartridgeItem(s, true), new Item.Settings().maxCount(1).rarity(Rarity.RARE));
+    public static final Item BREAKPOINT_WAND = item("breakpoint_wand", BreakpointWandItem::new, new Item.Settings().maxCount(1));
+    public static final Item GIT_RESET = item("git_reset", GitResetItem::new, new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON));
+
+    // ---- the Unmaker's arsenal and Null Materials ----
+    public static final Item GLITCH_GRENADE = item("glitch_grenade", GlitchGrenadeItem::new, new Item.Settings().maxCount(16));
+    public static final Item EDITOR = item("editor", EditorItem::new, new Item.Settings().maxDamage(96).rarity(Rarity.UNCOMMON));
+    public static final Item CRASH_CORE = item("crash_core", CrashCoreItem::new, new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
+    public static final Item NULL_SHARD = item("null_shard", s -> new LoreItem(s, true), new Item.Settings().rarity(Rarity.RARE));
+    /** NaN protection: the chestplate's defense is not a number. Its effect is in Hooks. */
+    public static final ArmorMaterial NAN_MATERIAL = new ArmorMaterial(37,
+            Map.of(EquipmentType.HELMET, 0, EquipmentType.CHESTPLATE, 0, EquipmentType.LEGGINGS, 0,
+                    EquipmentType.BOOTS, 0, EquipmentType.BODY, 0),
+            15, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 0f, 0f, ItemTags.REPAIRS_NETHERITE_ARMOR, EquipmentAssetKeys.NETHERITE);
+    public static final Item UNDEFINED_SWORD = item("undefined_sword", UndefinedSwordItem::new,
+            new Item.Settings().sword(ToolMaterial.NETHERITE, 3f, -2.4f).fireproof().rarity(Rarity.EPIC));
+    public static final Item NAN_CHESTPLATE = item("nan_chestplate", s -> new LoreItem(s, true),
+            new Item.Settings().armor(NAN_MATERIAL, EquipmentType.CHESTPLATE).fireproof().rarity(Rarity.EPIC));
 
     static {
         for (Concept concept : Concept.values()) {

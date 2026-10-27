@@ -10,7 +10,7 @@
   "entrypoints": {
     "main": ["dev.scripted.forgotten.Forgotten"],
     "client": ["dev.scripted.forgotten.client.ForgottenClient"],
-    "fabric-gametest": ["dev.scripted.forgotten.gametest.ForgottenGameTests"]
+    "fabric-gametest": ["dev.scripted.forgotten.gametest.ForgottenGameTests", "dev.scripted.forgotten.gametest.SiliconGameTests"]
   },
   "mixins": [
     "forgotten.mixins.json",
