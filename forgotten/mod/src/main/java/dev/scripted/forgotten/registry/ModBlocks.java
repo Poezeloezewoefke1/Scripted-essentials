@@ -3,6 +3,7 @@ package dev.scripted.forgotten.registry;
 import dev.scripted.forgotten.Forgotten;
 import dev.scripted.forgotten.block.CompilerChestBlock;
 import dev.scripted.forgotten.block.FrameAnchorBlock;
+import dev.scripted.forgotten.block.GenesisInterfaceBlock;
 import dev.scripted.forgotten.block.IndexedBlock;
 import dev.scripted.forgotten.block.RiftBlock;
 import dev.scripted.forgotten.block.MarrowglassBlock;
@@ -88,6 +89,9 @@ public final class ModBlocks {
     public static final Block FRAME_ANCHOR = block("frame_anchor", FrameAnchorBlock::new,
             AbstractBlock.Settings.create().mapColor(MapColor.TERRACOTTA_BROWN).strength(5f, 1200f).requiresTool()
                     .luminance(s -> 6).sounds(BlockSoundGroup.LODESTONE).pistonBehavior(PistonBehavior.BLOCK));
+    public static final Block GENESIS_INTERFACE = block("genesis_interface", GenesisInterfaceBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.WHITE).strength(50f, 3600000f).requiresTool()
+                    .luminance(s -> 15).sounds(BlockSoundGroup.AMETHYST_BLOCK).pistonBehavior(PistonBehavior.BLOCK));
     public static final Block RIFT = block("rift", RiftBlock::new,
             AbstractBlock.Settings.create().mapColor(MapColor.BLACK).strength(-1f, 3600000f).noCollision().dropsNothing()
                     .luminance(s -> 12).pistonBehavior(PistonBehavior.BLOCK), false);

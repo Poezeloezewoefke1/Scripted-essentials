@@ -166,6 +166,10 @@ BLOCKS = {
                          model='cube_bottom_top', top=lambda: T.rune_block(123, '#2a1a10', '#ffb347'),
                          side=lambda: T.rune_block(124, '#3a2614', '#d88a3a'), bottom=lambda: T.noise_block(125, '#2a1a10'),
                          loot='self', tools=['pickaxe'], level='iron'),
+    'genesis_interface': dict(name='Genesis Interface', desc='Feed it Source Code to summon the Author. Once it has asked its question, it writes the rules, the laws and the ending.',
+                              model='cube_bottom_top', top=lambda: T.rune_block(127, '#f4f4f4', '#ffd27a'),
+                              side=lambda: T.circuit(128, '#e8e8e8', '#c9a227'), bottom=lambda: T.noise_block(129, '#d8d8d8'),
+                              loot='self', tools=['pickaxe'], level='diamond'),
     'rift': dict(name='Rift', desc='Where an Infinite Loop fell through the world.',
                  model='cube', all=lambda: T.static(126, '#05000a', '#5b2d8a'), loot='none', tools=[]),
 }
@@ -195,6 +199,8 @@ SHAPED = {
                                           'N': 'minecraft:nether_star'}, 1),
     'frame_anchor': (['OFO', 'FEF', 'OFO'], {'O': 'minecraft:crying_obsidian', 'F': 'minecraft:item_frame',
                                               'E': 'minecraft:ender_eye'}, 1),
+    'genesis_interface': (['UPU', 'WNW', 'UPU'], {'U': 'forgotten:unwritten_fragment', 'P': 'forgotten:concept_possibility',
+                                                  'W': 'forgotten:concept_witness', 'N': 'minecraft:nether_star'}, 1),
     'undefined_sword': (['N', 'N', 'S'], {'N': 'forgotten:null_shard', 'S': 'minecraft:netherite_ingot'}, 1),
     'nan_chestplate': (['N N', 'NIN', 'NNN'], {'N': 'forgotten:null_shard', 'I': 'minecraft:netherite_ingot'}, 1),
 }
@@ -275,6 +281,12 @@ ADVANCEMENTS = {
     'boss_compiler': ('Fatal Exception', 'Crash the Compiler three times.', 'forgotten:source_code', 'the_crash'),
     'boss_curator': ('Deaccessioned', 'Defeat the Curator in the Archive.', 'forgotten:concept_memory', 'the_archive'),
     'boss_unwrapper': ('Heavy Enough', 'Feed the Unwrapper until it cannot move.', 'forgotten:frame_anchor', 'depth'),
+    'boss_author': ('The Question', 'Shake the Author\'s conviction until it asks.', 'forgotten:genesis_interface', 'boss_compiler'),
+    'ending_preserve': ('Preserved', 'Restore the constraints.', 'forgotten:reality_anchor', 'boss_author'),
+    'ending_restore': ('Released', 'Restore the First World.', 'forgotten:memory_of_the_first_world', 'boss_author'),
+    'ending_author': ('Authored', 'Become the Author.', 'forgotten:architect_codex', 'boss_author'),
+    'ending_merge': ('Merged', 'Become part of the world.', 'minecraft:lodestone', 'boss_author'),
+    'ending_terminate': ('Run Again', 'End this run. The next world will remember it.', 'forgotten:null_shard', 'boss_author'),
     'scratch_layer': ('The Scratch Layer', 'Reach the deepest copy, where generation has given up.', 'minecraft:tinted_glass', 'depth'),
 }
 
@@ -282,6 +294,7 @@ LANG_EXTRA = {
     'itemGroup.forgotten': 'The World That Forgot Itself',
     'container.forgotten.paradox_engine': 'Paradox Engine',
     'container.forgotten.compiler_chest': 'Compiler Chest',
+    'container.forgotten.genesis_interface': 'Genesis Interface',
     'entity.forgotten.glitch_grenade': 'Glitch Grenade',
     'item.forgotten.memory.of': 'Memory of %s',
     'item.forgotten.folded_memory.of': 'Folded Memory of %s %s',

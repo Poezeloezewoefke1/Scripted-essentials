@@ -284,7 +284,8 @@ public final class Rifts {
             Texts.tell(player, Texts.world("You wake. Something of the Underdream is still on your hands."));
             return true;
         }
-        boolean invited = world.isThundering() || Reality.player(player).observer.grantsPassage();
+        boolean invited = world.isThundering() || Reality.player(player).observer.grantsPassage()
+                || Reality.memory(world.getServer()).rule(dev.scripted.forgotten.logic.genesis.GenesisRule.WORLD_DREAMS);
         if (world.getRegistryKey() != World.OVERWORLD || !invited) {
             return false;
         }
@@ -316,6 +317,7 @@ public final class Rifts {
         Reality.player(player).returnPoint = point(world, player.getEntityPos());
         Vec3d at = Travel.surface(first, player.getBlockX(), player.getBlockZ());
         Travel.teleport(player, first, at, player.getYaw(), player.getPitch());
+        Genesis.revealBeginning(player);
         arrive(player, first, "THE FIRST WORLD", "Your world, before anything happened to it. Nothing you built is here. Nothing you broke is broken.");
         Reality.advance(player, "the_first_world");
     }

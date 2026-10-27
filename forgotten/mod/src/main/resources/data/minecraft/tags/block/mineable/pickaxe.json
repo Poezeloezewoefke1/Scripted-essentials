@@ -14,6 +14,7 @@
     "forgotten:data_block",
     "forgotten:memory_block",
     "forgotten:compiler_chest",
-    "forgotten:frame_anchor"
+    "forgotten:frame_anchor",
+    "forgotten:genesis_interface"
   ]
 }

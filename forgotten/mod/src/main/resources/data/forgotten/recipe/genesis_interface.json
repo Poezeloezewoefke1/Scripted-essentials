@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "UPU",
+    "WNW",
+    "UPU"
+  ],
+  "key": {
+    "U": "forgotten:unwritten_fragment",
+    "P": "forgotten:concept_possibility",
+    "W": "forgotten:concept_witness",
+    "N": "minecraft:nether_star"
+  },
+  "result": {
+    "id": "forgotten:genesis_interface",
+    "count": 1
+  }
+}

@@ -4,6 +4,7 @@ import dev.scripted.forgotten.Forgotten;
 import dev.scripted.forgotten.Reality;
 import dev.scripted.forgotten.item.MemoryItem;
 import dev.scripted.forgotten.logic.boss.ActionMemory;
+import dev.scripted.forgotten.logic.boss.AuthorTrial;
 import dev.scripted.forgotten.logic.boss.CuratorProfile;
 import dev.scripted.forgotten.logic.boss.StackDepth;
 import dev.scripted.forgotten.logic.chronicle.ChronicleEvent;
@@ -76,7 +77,8 @@ public final class Bosses {
         CARTOGRAPHER("The Cartographer", BossBar.Color.BLUE),
         COMPILER("The Compiler", BossBar.Color.WHITE),
         CURATOR("The Curator", BossBar.Color.PINK),
-        UNWRAPPER("The Unwrapper", BossBar.Color.RED);
+        UNWRAPPER("The Unwrapper", BossBar.Color.RED),
+        AUTHOR("The Author", BossBar.Color.WHITE);
 
         final String title;
         final BossBar.Color color;
@@ -106,6 +108,7 @@ public final class Bosses {
         final ServerBossBar bar;
         final ActionMemory actions = new ActionMemory();
         final StackDepth stack = new StackDepth();
+        final AuthorTrial trial = new AuthorTrial();
         double fed;
         CuratorProfile curator;
 
@@ -161,6 +164,7 @@ public final class Bosses {
             case COMPILER -> EntityType.IRON_GOLEM;
             case CURATOR -> EntityType.ZOMBIE;
             case UNWRAPPER -> EntityType.RAVAGER;
+            case AUTHOR -> EntityType.ILLUSIONER;
         };
         MobEntity body = type.create(world, SpawnReason.EVENT);
         if (body == null) {
@@ -178,6 +182,7 @@ public final class Bosses {
             case COMPILER -> 100;
             case CURATOR -> CuratorProfile.from(Reality.memory(world.getServer()).chronicle).health();
             case UNWRAPPER -> 400;
+            case AUTHOR -> 200;
         };
         double scale = switch (kind) {
             case RECURSION_QUEEN -> 3.0;
@@ -187,6 +192,7 @@ public final class Bosses {
             case COMPILER -> 1.6;
             case CURATOR -> 2.4;
             case UNWRAPPER -> 1.6;
+            case AUTHOR -> 1.3;
         };
         Creatures.modifier(body, EntityAttributes.MAX_HEALTH, BOSS_HEALTH, health - body.getMaxHealth());
         Creatures.modifier(body, EntityAttributes.SCALE, BOSS_SCALE, scale - 1.0);
@@ -223,6 +229,7 @@ public final class Bosses {
                 body.setSilent(true);
             }
             case UNWRAPPER -> BioNodes.strip(body);
+            case AUTHOR -> body.setGlowing(true);
             default -> {
             }
         }
@@ -305,11 +312,15 @@ public final class Bosses {
         float percent = switch (boss.kind) {
             case COMPILER -> 1f - boss.stack.crashes() / (float) StackDepth.CRASHES_TO_DEFEAT
                     - boss.stack.depth() / (float) (boss.stack.phaseSize() * 3 * StackDepth.CRASHES_TO_DEFEAT);
+            case AUTHOR -> boss.trial.conviction() / (float) AuthorTrial.CONVICTION;
             case UNWRAPPER -> Math.min(body.getHealth() / body.getMaxHealth(),
                     1f - (float) (boss.fed / NestingInstability.unwrapperMass(dev.scripted.forgotten.logic.nesting.Depths.MAX)));
             default -> body.getHealth() / body.getMaxHealth();
         };
         boss.bar.setPercent(Math.max(0f, Math.min(1f, percent)));
+        if (boss.kind == Kind.AUTHOR) {
+            boss.bar.setName(Text.literal(boss.kind.title + "  conviction " + boss.trial.conviction() + "  - " + boss.trial.step().line()));
+        }
         if (boss.kind == Kind.COMPILER) {
             boss.bar.setName(Text.literal(boss.kind.title + "  stack depth " + boss.stack.depth() + "  " + boss.stack.phase()
                     + (boss.stack.phase() == StackDepth.Phase.COMPILE ? "  delete in " + boss.stack.countdown() / 20 + "s" : "")));
@@ -422,6 +433,91 @@ public final class Bosses {
                 }
             }
             case UNWRAPPER -> unwrap(world, boss);
+            case AUTHOR -> {
+                if (target != null && random.nextInt(5) == 0) {
+                    unmake(world, boss, target);
+                }
+            }
+        }
+    }
+
+    // ---- the Author ----
+
+    /** The Author works through your abilities one step at a time, trying to return you to how you began. */
+    static void unmake(ServerWorld world, Boss boss, ServerPlayerEntity target) {
+        switch (boss.trial.step()) {
+            case UNMAKE_INVENTORY -> {
+                var inv = target.getInventory();
+                int a = inv.getSelectedSlot();
+                int b = 9 + world.getRandom().nextInt(27);
+                ItemStack held = inv.getStack(a);
+                inv.setStack(a, inv.getStack(b));
+                inv.setStack(b, held);
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 100, 1));
+            }
+            case UNMAKE_ENCHANTMENTS -> target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 100, 1));
+            case UNMAKE_EDITS -> {
+                var memory = Reality.player(target);
+                if (!memory.edits.isEmpty()) {
+                    RealityEdits.revoke(world, memory.edits.remove(memory.edits.size() - 1));
+                }
+            }
+            case UNMAKE_CAUSES -> {
+                Vec3d back = Hooks.rewindPoint(target);
+                target.requestTeleport(back.x, back.y, back.z);
+            }
+            case UNMAKE_RETURN -> target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 100, 0));
+            case QUESTION -> {
+                return;
+            }
+        }
+        Texts.bar(target, Texts.world(boss.trial.step().line()));
+    }
+
+    /** A concept held out to the Author. The right one shakes its conviction far more than any blow. */
+    public static boolean answer(Entity entity, ServerPlayerEntity player, Concept concept) {
+        Boss boss = BOSSES.get(entity.getUuid());
+        if (boss == null || boss.kind != Kind.AUTHOR || !(entity.getEntityWorld() instanceof ServerWorld world)) {
+            return false;
+        }
+        AuthorTrial.Step before = boss.trial.step();
+        AuthorTrial.Step after = boss.trial.answer(concept);
+        world.spawnParticles(ParticleTypes.END_ROD, entity.getX(), entity.getBodyY(0.6), entity.getZ(), 30, 0.5, 0.6, 0.5, 0.1);
+        if (concept == before.answer()) {
+            Texts.bar(player, Texts.discovery(concept.name().charAt(0) + concept.name().substring(1).toLowerCase(java.util.Locale.ROOT)
+                    + ". It falters."));
+        }
+        trialProgress(world, boss, after);
+        return true;
+    }
+
+    static void trialProgress(ServerWorld world, Boss boss, AuthorTrial.Step step) {
+        if (step != AuthorTrial.Step.QUESTION) {
+            return;
+        }
+        MobEntity body = boss.body;
+        body.setAiDisabled(true);
+        body.setInvulnerable(true);
+        WorldMemory memory = Reality.memory(world.getServer());
+        if (memory.setFlag(Genesis.AUTHOR_ASKED)) {
+            Reality.chronicle(world, ChronicleEvent.BOSS_DEFEATED, body.getBlockPos(), "", "author");
+        }
+        for (ServerPlayerEntity p : world.getPlayers(p -> p.squaredDistanceTo(body) < 64 * 64)) {
+            Texts.tell(p, Texts.discovery("\"" + AuthorTrial.Step.QUESTION.line() + "\""));
+            Texts.tell(p, Texts.world("It waits. Answer at the Genesis Interface."));
+            Reality.insight(p, Insight.BOSS_DEFEATED);
+            Reality.advance(p, "boss_author");
+        }
+    }
+
+    /** Once an ending is chosen, the Author has nothing left to ask. */
+    public static void dismissAuthor(MinecraftServer server) {
+        for (Boss boss : new ArrayList<>(BOSSES.values())) {
+            if (boss.kind == Kind.AUTHOR) {
+                boss.bar.clearPlayers();
+                boss.body.discard();
+                BOSSES.remove(boss.body.getUuid());
+            }
         }
     }
 
@@ -652,6 +748,12 @@ public final class Bosses {
             case UNWRAPPER -> {
                 return !(source.getAttacker() instanceof net.minecraft.entity.mob.HostileEntity);
             }
+            case AUTHOR -> {
+                if (attacker instanceof PlayerEntity) {
+                    trialProgress(world, boss, boss.trial.strike());
+                }
+                return false;
+            }
             default -> {
                 return true;
             }
@@ -690,6 +792,8 @@ public final class Bosses {
             case CURATOR -> {
                 drops.add(new ItemStack(ModItems.concept(Concept.MEMORY), 3));
                 drops.add(dev.scripted.forgotten.util.Lore.book(world.getRandom()));
+            }
+            case AUTHOR -> {
             }
             case UNWRAPPER -> {
                 drops.add(new ItemStack(ModItems.concept(Concept.FINALITY), 2));

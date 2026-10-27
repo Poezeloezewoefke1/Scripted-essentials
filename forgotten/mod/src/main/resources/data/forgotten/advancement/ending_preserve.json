@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.ending_preserve.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.ending_preserve.description"
+    },
+    "icon": {
+      "id": "forgotten:reality_anchor"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:boss_author"
+}

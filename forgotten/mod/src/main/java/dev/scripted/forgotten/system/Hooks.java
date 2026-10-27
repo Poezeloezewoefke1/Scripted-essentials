@@ -72,6 +72,7 @@ public final class Hooks {
             if (world instanceof ServerWorld server && player instanceof ServerPlayerEntity sp) {
                 broken(server, sp, pos.toImmutable(), state);
                 Unraveling.nullDrop(server, pos.toImmutable(), false);
+                Genesis.broken(server, sp, pos.toImmutable(), state, blockEntity);
             }
         });
         UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
@@ -92,7 +93,12 @@ public final class Hooks {
         ServerLivingEntityEvents.ALLOW_DEATH.register(Hooks::allowDeath);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
                 SunDogs.allowDamage(entity, source, amount) && Bosses.allowDamage(entity, source, amount)
-                        && Hooks.notANumber(entity, source));
+                        && Hooks.notANumber(entity, source) && Genesis.allowDamage(entity, source, amount));
+        ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> Genesis.allowDeath(entity, source));
+        net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents.AFTER_RESPAWN.register(Genesis::respawned);
+        net.fabricmc.fabric.api.event.player.UseEntityCallback.EVENT.register((player, world, hand, entity, hit) ->
+                player instanceof ServerPlayerEntity sp && sp.getStackInHand(hand).getItem() instanceof dev.scripted.forgotten.item.ConceptItem concept
+                        && Bosses.answer(entity, sp, concept.concept()) ? ActionResult.SUCCESS : ActionResult.PASS);
         ServerLivingEntityEvents.AFTER_DEATH.register(Hooks::died);
         EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
             if (entity instanceof ServerPlayerEntity player) {
@@ -106,6 +112,7 @@ public final class Hooks {
             SunDogs.adopt(entity);
             Creatures.adopt(entity);
             Bosses.adopt(entity);
+            Genesis.onLoad(entity, world);
             if (entity.getCommandTags().contains(dev.scripted.forgotten.util.Displays.TAG)
                     && !dev.scripted.forgotten.util.Displays.LIVE.contains(entity.getUuid())) {
                 // Displays are never meant to outlive the moment that made them.
@@ -148,6 +155,7 @@ public final class Hooks {
             Rifts.clear();
             Creatures.clear();
             Bosses.clear();
+            Genesis.clear();
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ForgottenCommand.register(dispatcher));
     }

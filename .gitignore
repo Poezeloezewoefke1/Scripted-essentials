@@ -18,3 +18,4 @@ forgotten/.gradle/
 forgotten/**/build/
 forgotten/mod/run/
 !forgotten/gradle/wrapper/gradle-wrapper.jar
+javac.*.args

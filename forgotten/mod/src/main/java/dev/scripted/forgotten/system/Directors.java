@@ -36,6 +36,7 @@ public final class Directors {
         SunDogs.tick(now);
         Creatures.tick(now);
         Bosses.tick(server, now);
+        Genesis.tick(server, now);
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             Hooks.trail(player);
             Rifts.tickPlayer(player, now);

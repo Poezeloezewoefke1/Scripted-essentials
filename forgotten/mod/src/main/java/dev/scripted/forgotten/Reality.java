@@ -76,6 +76,10 @@ public final class Reality {
         if (e == Ending.PRESERVE) {
             return 85;
         }
+        if (e == Ending.AUTHOR && memory(server).law(new dev.scripted.forgotten.logic.genesis.Law(
+                dev.scripted.forgotten.logic.genesis.LawSubject.WORLD, dev.scripted.forgotten.logic.concept.Concept.IDENTITY))) {
+            return dev.scripted.forgotten.logic.integrity.IntegrityStage.CONTRADICTION.floor();
+        }
         return 0;
     }
 
