@@ -1,0 +1,6 @@
+-proc:none
+-Xmaxerrs
+100000
+-d
+/tmp/tmp.RUxnnUina5/classes
+@/tmp/tmp.RUxnnUina5/sources.txt

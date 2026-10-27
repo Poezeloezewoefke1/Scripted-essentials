@@ -46,6 +46,18 @@ jobs:
           echo "latest published Fabric API builds for 1.21.11:"
           curl -fsS https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml | grep -o '0\.[0-9.]*+1\.21\.11' | tail -3 || true
 
+      - name: Static checks (resources against vanilla 1.21.11, imports against Yarn and Fabric API)
+        working-directory: .
+        run: |
+          set -e
+          mkdir -p /tmp/ref
+          curl -fsS -o /tmp/ref/registries.json https://raw.githubusercontent.com/misode/mcmeta/1.21.11-summary/registries/data.json
+          git clone -q --depth 1 --branch 1.21.11 --filter=blob:none --sparse https://github.com/FabricMC/yarn /tmp/ref/yarn
+          git -C /tmp/ref/yarn sparse-checkout set mappings
+          git clone -q --depth 1 --branch 1.21.11 https://github.com/FabricMC/fabric /tmp/ref/fabric
+          python3 -m pip install -q pillow
+          python3 forgotten/tools/validate.py --vanilla /tmp/ref/registries.json --yarn /tmp/ref/yarn/mappings --fabric /tmp/ref/fabric
+
       - name: Unit tests (logic module)
         # skipMinecraft keeps Loom out of this step so these tests run even if the mod cannot.
         run: ./gradlew -PskipMinecraft=true :logic:test 2>&1 | tee ../logic.log; exit ${PIPESTATUS[0]}
