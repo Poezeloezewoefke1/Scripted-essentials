@@ -97,7 +97,7 @@ forgotten/
            laws, endings, palimpsest. 52 JUnit tests.
   mod/     the Fabric mod. Built against Yarn 1.21.11+build.6, Fabric Loader 0.20.1,
            Fabric API 0.141.6+1.21.11 and Loom 1.19.
-           src/main/java/.../gametest: 40 gametests run on a real dedicated server.
+           src/main/java/.../gametest: 48 gametests run on a real dedicated server.
   tools/   generate_resources.py (every texture, model, recipe, loot table, advancement,
            language entry and dimension file is generated from tables in this script),
            validate.py, syntax_check.sh, and templates/ (vanilla 1.21.11 JSON the
@@ -141,7 +141,9 @@ repository belong to the Paper plugin, a different project, and are not evidence
   - ad35a0c (Silicon & Spores and the Unmaker's tools): 25
   - f74fbcd (dimensions): 29
   - 691f4b1 (creatures and bosses): 36
-  - Later batches: see the latest workflow run on this branch.
+  - ef36384 (the Author, Genesis Interface, rules, laws, endings): 41
+  - e724da9 (Reality Architecture, politics, Inheritors, Workshop): **all 48 pass**
+  - Each run also uploads the built mod jar as the `forgotten-mod` artifact.
 - `tools/validate.py`: every generated resource refers to registered items, blocks and vanilla
   ids; every Minecraft import exists in Yarn 1.21.11; every Fabric import exists in Fabric
   API; every `Class.member` reference to the mod's own classes exists. Mutation-tested.
