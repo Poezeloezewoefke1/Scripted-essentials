@@ -65,13 +65,25 @@ built twice:
    the Crash. Programs compiled in the Compiler Chest turn spliced animals into Bio-Nodes.
 4. **The world wakes.** Lucidity rises. Forests remember who cut them, and creepers stop to
    think. Reality Storms rewrite the rules for a while. The Observer appears near the places
-   you return to.
-5. **Go where it keeps itself.** The Backside, the Stack, the Underdream, the Archive, the First
-   World, and nested copies of the world where time runs faster.
-6. **Bosses:** the Recursion Queen, the King of Yesterday, the Gardener, the Cartographer, the
+   you return to. Once the world is Awake, it grows Anachronisms (water that flows upward, fish
+   made of light), and the Inheritors return. They are an older people who trade, accept gifts,
+   remember harm, and go to war if harmed enough.
+5. **Build a universe of your own.** Reality Architecture: a Core of Identity powers nearby
+   chambers. Gravity points the way you choose, time runs faster, two doors join across any
+   distance, a Memory Vault rebuilds what was lost, and Possibility Seeds grow into whatever
+   they might have been.
+6. **Politics** (multiplayer). Architect Guilds claim chunks and set rules there (floating base,
+   permanent night, sealed ground). Rule Anchors enforce local laws until a Reality Storm
+   suspends them. Elections choose a World Admin for a day. Killing an Architect leaves a
+   Codex Fragment that lends their rank.
+7. **Go where it keeps itself.** The Backside, the Stack, the Underdream (Marrowglass, Quiet,
+   Tomorrow), the Archive, the First World, and nested copies of the world where time runs
+   faster. Below the deepest copy is the Workshop. On its one workbench sits the real grass
+   block, and anyone who reaches it can rewrite the world's laws, at a cost to everyone.
+8. **Bosses:** the Recursion Queen, the King of Yesterday, the Gardener, the Cartographer, the
    Compiler (in the Null Layer left by the Crash), the Curator (in the Archive) and the
    Unwrapper (when the nesting grows unstable). Each one can only be hurt in its own way.
-7. **The Author.** The Compiler drops Source Code. Feed it to the Genesis Interface and the
+9. **The Author.** The Compiler drops Source Code. Feed it to the Genesis Interface and the
    Author comes to argue that every change you made was a deviation. Answer each of its steps
    with the right Concept, and when its conviction runs out it asks its question. The Genesis
    Interface then writes seven world rules, the ending, and (if you become the Author) 36 laws.
@@ -143,7 +155,11 @@ repository belong to the Paper plugin, a different project, and are not evidence
   test has generated terrain in them or teleported a player there. The travel code that sends
   you to each dimension is compiled and partly unit-tested, but not run end to end.
 - **Multiplayer**, performance on a large world, and compatibility with other mods.
-- **Client-side rendering** of the thrown Glitch Grenade and the translucent Marrowglass.
+- **Client-side rendering** of the thrown Glitch Grenade, the translucent Marrowglass and the
+  Possibility sprout.
+- **The guild, election and World Admin commands** (`/forgotten guild …`, `election`, `vote`,
+  `worldadmin`). They compile, and the territory rules they set are covered by gametests, but
+  the commands themselves have not been run.
 
 **Approximations.** In these places the design asked for something a server cannot do, and the
 mod does something close:
@@ -157,6 +173,11 @@ mod does something close:
 - **The Crash's Null Layer.** It is the crashed region itself, not a separate dimension.
 - **The Editor.** Its edits are held in memory for one minute. If the server stops during that
   minute, the edit becomes permanent.
+- **Guild "permanent night".** Time of day is shared by the whole world. In a guild's
+  territory, the sun stops burning the undead and outsiders get Darkness, but the sky does not
+  change.
+- **Anachronisms and Inheritor cities** are small, generated near players at runtime, not
+  worldgen structures.
 - **The World/Causality law** (undoing explosions) and **World/Finality** (nothing breaks)
   snapshot the blocks around a creeper or TNT one tick before it explodes. Other explosions
   (beds, crystals, withers) are not caught.
