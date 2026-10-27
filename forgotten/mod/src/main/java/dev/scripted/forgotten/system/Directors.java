@@ -37,6 +37,10 @@ public final class Directors {
         Creatures.tick(now);
         Bosses.tick(server, now);
         Genesis.tick(server, now);
+        Eaters.tick(server);
+        Guilds.explosions(server);
+        Guilds.tick(server, now);
+        Architecture.tick(server, now);
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             Hooks.trail(player);
             Rifts.tickPlayer(player, now);
@@ -76,6 +80,7 @@ public final class Directors {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 MemoryBleed.tick(Reality.world(player), player, now);
                 Palimpsests.tick(Reality.world(player), player);
+                Anachronisms.tick(Reality.world(player), player, now);
             }
         }
         StormDirector.tick(server, now);

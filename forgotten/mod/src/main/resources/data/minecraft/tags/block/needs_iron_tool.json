@@ -4,6 +4,10 @@
     "forgotten:paradox_engine",
     "forgotten:reality_anchor",
     "forgotten:possibility_eater",
-    "forgotten:frame_anchor"
+    "forgotten:frame_anchor",
+    "forgotten:rule_anchor",
+    "forgotten:gravity_chamber",
+    "forgotten:temporal_chamber",
+    "forgotten:distance_chamber"
   ]
 }

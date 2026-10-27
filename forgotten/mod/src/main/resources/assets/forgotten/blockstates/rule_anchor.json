@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "forgotten:block/rule_anchor"
+      }
+    }
+  ]
+}

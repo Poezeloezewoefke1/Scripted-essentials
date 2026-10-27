@@ -33,11 +33,18 @@ public class GenesisMenu extends ServerMenu {
     public static final int ENDINGS = 9;
     public static final int LAWS = 18;
     private final ServerPlayerEntity player;
+    /** Opened from the Workshop: only laws, and anyone may rewrite them, at a cost. */
+    private final boolean workshop;
     private Ending armed;
 
     public GenesisMenu(int syncId, PlayerInventory inventory) {
+        this(syncId, inventory, false);
+    }
+
+    public GenesisMenu(int syncId, PlayerInventory inventory, boolean workshop) {
         super(ScreenHandlerType.GENERIC_9X6, syncId, 6);
         this.player = (ServerPlayerEntity) inventory.player;
+        this.workshop = workshop;
         for (int i = 0; i < containerSize; i++) {
             addSlot(new LockedSlot(display, i));
         }
@@ -91,13 +98,14 @@ public class GenesisMenu extends ServerMenu {
                 display.setStack(ENDINGS + i, ItemStack.EMPTY);
             }
         }
-        boolean author = Genesis.isAuthor(memory, player);
+        boolean author = workshop || Genesis.isAuthor(memory, player);
         for (int i = 0; i < 36; i++) {
             Law law = lawAt(LAWS + i);
             boolean on = memory.law(law);
             Item icon = ModItems.concept(law.concept());
             display.setStack(LAWS + i, button(icon, law.describe(), on ? Formatting.AQUA : Formatting.DARK_GRAY,
-                    List.of(author ? "Click to " + (on ? "repeal." : "enact.") : "Only the Author writes laws."), on));
+                    List.of(workshop ? "Click to rewrite. Every rewrite unsettles the nesting for everyone."
+                            : author ? "Click to " + (on ? "repeal." : "enact.") : "Only the Author writes laws."), on));
         }
         sendContentUpdates();
     }
@@ -116,6 +124,13 @@ public class GenesisMenu extends ServerMenu {
             return;
         }
         WorldMemory memory = Reality.memory(sp.getEntityWorld().getServer());
+        if (workshop) {
+            if (index >= LAWS) {
+                Genesis.workshopLaw(sp, lawAt(index));
+                refresh();
+            }
+            return;
+        }
         if (index < ENDINGS) {
             int i = index - RULES;
             if (i < GenesisRule.values().length) {

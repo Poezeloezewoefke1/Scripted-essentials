@@ -34,7 +34,9 @@ public class SimpleUseItem extends LoreItem {
         /** Death does not apply to this player, for five minutes. The debt comes later. */
         UNWRITTEN_DEATH,
         /** From the Draft. Exactly one gravity: whatever has been done to your weight is undone. */
-        ONE_GRAVITY;
+        ONE_GRAVITY,
+        /** From the Underdream. Everything in this chunk advances exactly one day. */
+        TOMORROW;
 
         /** The Draft's goods: they do not always work, and when they fail they take something with them. */
         boolean drafted() {
@@ -127,6 +129,10 @@ public class SimpleUseItem extends LoreItem {
                 player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
                         net.minecraft.entity.effect.StatusEffects.SLOW_FALLING, 200, 0));
                 Texts.tell(player, Texts.world("You have exactly one gravity. Do not lose it."));
+            }
+            case TOMORROW -> {
+                int grown = dev.scripted.forgotten.system.Anachronisms.tomorrow(server, player.getChunkPos());
+                Texts.tell(player, Texts.world("It is tomorrow here. " + grown + " things grew a day older."));
             }
             case BLOCK_OF_AIR -> {
                 return ActionResult.PASS;

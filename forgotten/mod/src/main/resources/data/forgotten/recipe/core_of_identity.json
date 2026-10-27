@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "QIQ",
+    "IAI",
+    "QIQ"
+  ],
+  "key": {
+    "Q": "minecraft:quartz_block",
+    "I": "forgotten:concept_identity",
+    "A": "forgotten:reality_anchor"
+  },
+  "result": {
+    "id": "forgotten:core_of_identity",
+    "count": 1
+  }
+}

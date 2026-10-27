@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "QGQ",
+    "GEG",
+    "QGQ"
+  ],
+  "key": {
+    "Q": "minecraft:quartz_block",
+    "G": "forgotten:concept_gravity",
+    "E": "forgotten:paradox_engine"
+  },
+  "result": {
+    "id": "forgotten:gravity_chamber",
+    "count": 1
+  }
+}

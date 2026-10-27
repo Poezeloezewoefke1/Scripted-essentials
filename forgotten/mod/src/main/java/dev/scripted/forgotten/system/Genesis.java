@@ -97,8 +97,7 @@ public final class Genesis {
     }
 
     static boolean law(MinecraftServer server, LawSubject subject, Concept concept) {
-        WorldMemory memory = Reality.memory(server);
-        return memory.ending() == Ending.AUTHOR && memory.law(new Law(subject, concept));
+        return Reality.memory(server).law(new Law(subject, concept));
     }
 
     static boolean law(Entity entity, Concept concept) {
@@ -157,6 +156,20 @@ public final class Genesis {
             }
         }
         Texts.tell(player, Texts.discovery((on ? "Enacted: " : "Repealed: ") + law.describe()));
+    }
+
+    /**
+     * The Workshop: anyone who reaches it can rewrite a law of the world they came from, but every
+     * rewrite makes the nesting less stable for everyone who goes deep afterwards.
+     */
+    public static void workshopLaw(ServerPlayerEntity player, Law law) {
+        WorldMemory memory = memory(player);
+        boolean on = memory.toggleLaw(law);
+        for (ServerPlayerEntity p : player.getEntityWorld().getServer().getPlayerManager().getPlayerList()) {
+            Reality.player(p).instability += 15;
+        }
+        Texts.tell(player, Texts.discovery((on ? "Rewritten: " : "Restored: ") + law.describe()));
+        Texts.tell(player, Texts.world("Somewhere below you, every layer shifts."));
     }
 
     // ---- endings ----
@@ -230,7 +243,7 @@ public final class Genesis {
         if (now % 20 != 0) {
             return;
         }
-        boolean laws = memory.ending() == Ending.AUTHOR;
+        boolean laws = !memory.laws().isEmpty();
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             ServerWorld world = Reality.world(player);
             if (laws) {
@@ -381,27 +394,24 @@ public final class Genesis {
     }
 
     static void explosions(MinecraftServer server, WorldMemory memory) {
-        if (memory.ending() != Ending.AUTHOR) {
-            return;
-        }
         boolean finality = memory.law(new Law(LawSubject.WORLD, Concept.FINALITY));
         boolean causality = memory.law(new Law(LawSubject.WORLD, Concept.CAUSALITY));
         if (!finality && !causality) {
             return;
         }
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-            ServerWorld world = Reality.world(player);
-            for (Entity e : world.getOtherEntities(null, player.getBoundingBox().expand(64), Genesis::aboutToExplode)) {
-                Map<BlockPos, BlockState> blocks = new HashMap<>();
-                for (BlockPos p : BlockPos.iterateOutwards(e.getBlockPos(), 6, 6, 6)) {
-                    BlockState s = world.getBlockState(p);
-                    if (!s.isAir() && !s.hasBlockEntity() && s.getFluidState().isEmpty()) {
-                        blocks.put(p.toImmutable(), s);
-                    }
-                }
-                Snapshot snapshot = new Snapshot(world, blocks);
-                Scheduler.after(finality ? 2 : 100, () -> restore(snapshot));
+        for (Entity e : Eaters.aboutToExplode()) {
+            if (!(e.getEntityWorld() instanceof ServerWorld world)) {
+                continue;
             }
+            Map<BlockPos, BlockState> blocks = new HashMap<>();
+            for (BlockPos p : BlockPos.iterateOutwards(e.getBlockPos(), 6, 6, 6)) {
+                BlockState s = world.getBlockState(p);
+                if (!s.isAir() && !s.hasBlockEntity() && s.getFluidState().isEmpty()) {
+                    blocks.put(p.toImmutable(), s);
+                }
+            }
+            Snapshot snapshot = new Snapshot(world, blocks);
+            Scheduler.after(finality ? 2 : 100, () -> restore(snapshot));
         }
     }
 
@@ -433,9 +443,10 @@ public final class Genesis {
     public static void onLoad(Entity entity, ServerWorld world) {
         MinecraftServer server = world.getServer();
         WorldMemory memory = Reality.memory(server);
-        boolean authored = memory.ending() == Ending.AUTHOR;
+        boolean authored = !memory.laws().isEmpty();
         if (entity instanceof FallingBlockEntity falling && (memory.rule(GenesisRule.GRAVITY_OPTIONAL)
-                || (authored && memory.law(new Law(LawSubject.WORLD, Concept.GRAVITY))))) {
+                || (authored && memory.law(new Law(LawSubject.WORLD, Concept.GRAVITY)))
+                || Guilds.gravityOptional(world, falling.getBlockPos()))) {
             BlockPos at = falling.getBlockPos();
             if (world.getBlockState(at).isAir()) {
                 world.setBlockState(at, falling.getBlockState(), Block.NOTIFY_ALL);
@@ -475,7 +486,7 @@ public final class Genesis {
 
     /** Damage under the laws: Possibility sometimes cancels it, Causality returns a third of it. */
     public static boolean allowDamage(LivingEntity entity, DamageSource source, float amount) {
-        if (!(entity.getEntityWorld() instanceof ServerWorld world) || Reality.ending(world.getServer()) != Ending.AUTHOR) {
+        if (!(entity.getEntityWorld() instanceof ServerWorld world)) {
             return true;
         }
         if (law(entity, Concept.POSSIBILITY) && world.getRandom().nextInt(10) == 0) {
@@ -512,7 +523,7 @@ public final class Genesis {
     public static void broken(ServerWorld world, ServerPlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         WorldMemory memory = Reality.memory(world.getServer());
         ItemStack tool = player.getMainHandStack();
-        if (memory.ending() == Ending.AUTHOR && memory.law(new Law(LawSubject.WORLD, Concept.POSSIBILITY))
+        if (memory.law(new Law(LawSubject.WORLD, Concept.POSSIBILITY))
                 && world.getRandom().nextInt(10) == 0 && !player.isCreative()) {
             for (ItemStack drop : Block.getDroppedStacks(state, world, pos, blockEntity, player, tool)) {
                 Block.dropStack(world, pos, drop);

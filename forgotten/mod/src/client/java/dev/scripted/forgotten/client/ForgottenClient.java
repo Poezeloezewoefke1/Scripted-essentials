@@ -17,6 +17,8 @@ public final class ForgottenClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockRenderLayerMap.putBlock(ModBlocks.MARROWGLASS, BlockRenderLayer.TRANSLUCENT);
+        BlockRenderLayerMap.putBlock(ModBlocks.POSSIBILITY_SPROUT, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.NULL_BLOCK, BlockRenderLayer.CUTOUT);
         EntityRendererFactories.register(ModEntities.GLITCH_GRENADE, FlyingItemEntityRenderer::new);
     }
 }

@@ -57,6 +57,8 @@ public final class WorldMemory extends PersistentState {
     public String archiveDimension = "";
     /** Recent things players said, kept for the palimpsest. */
     public final List<String> lines = new ArrayList<>();
+    /** Distance Chamber doors joined to each other, both ways: "dim|pos" to "dim|pos". */
+    public final Map<String, String> links = new HashMap<>();
 
     public WorldMemory() {
         this.lucidity = new LucidityLedger();
@@ -231,6 +233,9 @@ public final class WorldMemory extends PersistentState {
         nbt.put("frames", frameList);
         nbt.putInt("nextFrameId", nextFrameId);
         nbt.putLong("archivePos", archivePos);
+        NbtCompound linkTag = new NbtCompound();
+        links.forEach(linkTag::putString);
+        nbt.put("links", linkTag);
         nbt.putString("archiveDim", archiveDimension);
         nbt.put("lines", strings(lines));
         return nbt;
@@ -286,6 +291,10 @@ public final class WorldMemory extends PersistentState {
         }
         m.nextFrameId = nbt.getInt("nextFrameId", 1);
         m.archivePos = nbt.getLong("archivePos", Long.MIN_VALUE);
+        NbtCompound linkTag = nbt.getCompoundOrEmpty("links");
+        for (String k : linkTag.getKeys()) {
+            linkTag.getString(k).ifPresent(v -> m.links.put(k, v));
+        }
         m.archiveDimension = nbt.getString("archiveDim", "");
         m.lines.addAll(readStrings(nbt, "lines"));
         return m;

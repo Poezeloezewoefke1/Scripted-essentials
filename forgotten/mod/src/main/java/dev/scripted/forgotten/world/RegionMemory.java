@@ -38,6 +38,10 @@ public final class RegionMemory extends PersistentState {
     /** Anchor block position -> radius in chunks. */
     private final Long2IntOpenHashMap anchors = new Long2IntOpenHashMap();
     private final LongOpenHashSet quiet = new LongOpenHashSet();
+    /** Rule Anchors: position to the local law they enforce (RuleAnchorBlock.Rule ordinal). */
+    private final it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap ruleAnchors = new it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap();
+    /** Reality Architecture devices: position to device kind (ChamberBlock.Kind ordinal). */
+    private final it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap devices = new it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap();
     /** Chunks unmade by the Crash. They stay at zero; nothing can anchor them back. */
     private final LongOpenHashSet crashed = new LongOpenHashSet();
     private final LongOpenHashSet eaters = new LongOpenHashSet();
@@ -132,6 +136,65 @@ public final class RegionMemory extends PersistentState {
 
     public int anchorCount() {
         return anchors.size();
+    }
+
+    // ---- Rule Anchors and Reality Architecture ----
+
+    public void setRuleAnchor(BlockPos pos, int rule) {
+        ruleAnchors.put(pos.asLong(), rule);
+        markDirty();
+    }
+
+    public void removeRuleAnchor(BlockPos pos) {
+        if (ruleAnchors.containsKey(pos.asLong())) {
+            ruleAnchors.remove(pos.asLong());
+            markDirty();
+        }
+    }
+
+    /** Whether a Rule Anchor enforcing {@code rule} stands within {@code radius} of the point. */
+    public boolean ruled(double x, double y, double z, int rule, double radius) {
+        double r2 = radius * radius;
+        for (var e : ruleAnchors.long2IntEntrySet()) {
+            if (e.getIntValue() != rule) {
+                continue;
+            }
+            BlockPos p = BlockPos.fromLong(e.getLongKey());
+            double dx = p.getX() + 0.5 - x;
+            double dy = p.getY() + 0.5 - y;
+            double dz = p.getZ() + 0.5 - z;
+            if (dx * dx + dy * dy + dz * dz <= r2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setDevice(BlockPos pos, int kind) {
+        devices.put(pos.asLong(), kind);
+        markDirty();
+    }
+
+    public void removeDevice(BlockPos pos) {
+        if (devices.containsKey(pos.asLong())) {
+            devices.remove(pos.asLong());
+            markDirty();
+        }
+    }
+
+    /** Devices of one kind within a radius of a point. */
+    public List<BlockPos> devicesNear(BlockPos at, int kind, double radius) {
+        List<BlockPos> out = new ArrayList<>();
+        double r2 = radius * radius;
+        for (var e : devices.long2IntEntrySet()) {
+            if (e.getIntValue() == kind) {
+                BlockPos p = BlockPos.fromLong(e.getLongKey());
+                if (p.getSquaredDistance(at) <= r2) {
+                    out.add(p);
+                }
+            }
+        }
+        return out;
     }
 
     // ---- the Crash ----
@@ -280,6 +343,12 @@ public final class RegionMemory extends PersistentState {
         nbt.put("anchors", anchorList);
         nbt.putLongArray("quiet", quiet.toLongArray());
         nbt.putLongArray("crashed", crashed.toLongArray());
+        NbtCompound rules = new NbtCompound();
+        ruleAnchors.long2IntEntrySet().forEach(e -> rules.putInt(Long.toString(e.getLongKey()), e.getIntValue()));
+        nbt.put("ruleAnchors", rules);
+        NbtCompound devs = new NbtCompound();
+        devices.long2IntEntrySet().forEach(e -> devs.putInt(Long.toString(e.getLongKey()), e.getIntValue()));
+        nbt.put("devices", devs);
         nbt.putLongArray("eaters", eaters.toLongArray());
         return nbt;
     }
@@ -324,6 +393,14 @@ public final class RegionMemory extends PersistentState {
             if (el instanceof NbtCompound c) {
                 m.anchors.put(c.getLong("p", 0), c.getInt("r", 1));
             }
+        }
+        NbtCompound rules = nbt.getCompoundOrEmpty("ruleAnchors");
+        for (String k : rules.getKeys()) {
+            m.ruleAnchors.put(Long.parseLong(k), rules.getInt(k, 0));
+        }
+        NbtCompound devs = nbt.getCompoundOrEmpty("devices");
+        for (String k : devs.getKeys()) {
+            m.devices.put(Long.parseLong(k), devs.getInt(k, 0));
         }
         nbt.getLongArray("crashed").ifPresent(a -> {
             for (long l : a) {

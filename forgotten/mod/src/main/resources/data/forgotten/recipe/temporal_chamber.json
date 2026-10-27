@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "QCQ",
+    "CEC",
+    "QCQ"
+  ],
+  "key": {
+    "Q": "minecraft:quartz_block",
+    "C": "forgotten:concept_recursion",
+    "E": "minecraft:clock"
+  },
+  "result": {
+    "id": "forgotten:temporal_chamber",
+    "count": 1
+  }
+}

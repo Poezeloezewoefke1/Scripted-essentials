@@ -15,6 +15,12 @@
     "forgotten:memory_block",
     "forgotten:compiler_chest",
     "forgotten:frame_anchor",
-    "forgotten:genesis_interface"
+    "forgotten:genesis_interface",
+    "forgotten:rule_anchor",
+    "forgotten:core_of_identity",
+    "forgotten:gravity_chamber",
+    "forgotten:temporal_chamber",
+    "forgotten:distance_chamber",
+    "forgotten:memory_vault"
   ]
 }

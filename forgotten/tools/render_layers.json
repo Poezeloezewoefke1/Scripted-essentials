@@ -1,4 +1,5 @@
 {
   "null_block": "cutout",
-  "marrowglass": "translucent"
+  "marrowglass": "translucent",
+  "possibility_sprout": "cutout"
 }

@@ -61,6 +61,10 @@ public final class Hooks {
 
     public static void init() {
         PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) -> {
+            if (world instanceof ServerWorld sealed && player instanceof ServerPlayerEntity breaker && !breaker.isCreative()
+                    && !Guilds.allowBreak(sealed, breaker, pos)) {
+                return false;
+            }
             if (state.isOf(ModBlocks.UNWRITTEN_STONE) && world instanceof ServerWorld server && !player.isCreative()
                     && !Reality.storming(server.getServer())) {
                 Texts.bar((ServerPlayerEntity) player, Texts.world("It does not exist firmly enough to break. Not until the rules loosen."));
@@ -73,6 +77,7 @@ public final class Hooks {
                 broken(server, sp, pos.toImmutable(), state);
                 Unraveling.nullDrop(server, pos.toImmutable(), false);
                 Genesis.broken(server, sp, pos.toImmutable(), state, blockEntity);
+                Anachronisms.broken(server, pos.toImmutable(), state);
             }
         });
         UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
@@ -93,7 +98,9 @@ public final class Hooks {
         ServerLivingEntityEvents.ALLOW_DEATH.register(Hooks::allowDeath);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
                 SunDogs.allowDamage(entity, source, amount) && Bosses.allowDamage(entity, source, amount)
-                        && Hooks.notANumber(entity, source) && Genesis.allowDamage(entity, source, amount));
+                        && Hooks.notANumber(entity, source) && Genesis.allowDamage(entity, source, amount)
+                        && Guilds.allowDamage(entity, source, amount));
+        ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, base, taken, blocked) -> Anachronisms.harmed(entity, source));
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> Genesis.allowDeath(entity, source));
         net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents.AFTER_RESPAWN.register(Genesis::respawned);
         net.fabricmc.fabric.api.event.player.UseEntityCallback.EVENT.register((player, world, hand, entity, hit) ->
@@ -113,6 +120,7 @@ public final class Hooks {
             Creatures.adopt(entity);
             Bosses.adopt(entity);
             Genesis.onLoad(entity, world);
+            Eaters.onLoad(entity, world);
             if (entity.getCommandTags().contains(dev.scripted.forgotten.util.Displays.TAG)
                     && !dev.scripted.forgotten.util.Displays.LIVE.contains(entity.getUuid())) {
                 // Displays are never meant to outlive the moment that made them.
@@ -124,6 +132,7 @@ public final class Hooks {
             BioNodes.untrack(entity);
             Unraveling.forgetChest(entity);
             Creatures.untrack(entity);
+            Eaters.untrack(entity);
             if (entity.getRemovalReason() != Entity.RemovalReason.KILLED) {
                 Bosses.untrack(entity);
             }
@@ -156,6 +165,8 @@ public final class Hooks {
             Creatures.clear();
             Bosses.clear();
             Genesis.clear();
+            Guilds.clear();
+            Eaters.clear();
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ForgottenCommand.register(dispatcher));
     }
@@ -255,6 +266,10 @@ public final class Hooks {
         Puppets.onDeath(entity, source);
         Creatures.died(entity, source);
         Bosses.died(entity, source);
+        if (entity instanceof ServerPlayerEntity victim && source.getAttacker() instanceof ServerPlayerEntity killer && killer != victim) {
+            // A page of the fallen Architect's Codex can be torn out and read.
+            Block.dropStack(world, entity.getBlockPos(), dev.scripted.forgotten.item.CodexFragmentItem.of(ModItems.CODEX_FRAGMENT, victim));
+        }
         BlockPos pos = entity.getBlockPos();
         if (!(entity instanceof ServerPlayerEntity)) {
             Unraveling.nullDrop(world, pos, true);

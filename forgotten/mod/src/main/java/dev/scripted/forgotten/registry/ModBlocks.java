@@ -1,7 +1,12 @@
 package dev.scripted.forgotten.registry;
 
 import dev.scripted.forgotten.Forgotten;
+import dev.scripted.forgotten.block.ChamberBlock;
 import dev.scripted.forgotten.block.CompilerChestBlock;
+import dev.scripted.forgotten.block.MemoryVaultBlock;
+import dev.scripted.forgotten.block.PossibilitySproutBlock;
+import dev.scripted.forgotten.block.RuleAnchorBlock;
+import dev.scripted.forgotten.block.WorkshopBlock;
 import dev.scripted.forgotten.block.FrameAnchorBlock;
 import dev.scripted.forgotten.block.GenesisInterfaceBlock;
 import dev.scripted.forgotten.block.IndexedBlock;
@@ -92,6 +97,26 @@ public final class ModBlocks {
     public static final Block GENESIS_INTERFACE = block("genesis_interface", GenesisInterfaceBlock::new,
             AbstractBlock.Settings.create().mapColor(MapColor.WHITE).strength(50f, 3600000f).requiresTool()
                     .luminance(s -> 15).sounds(BlockSoundGroup.AMETHYST_BLOCK).pistonBehavior(PistonBehavior.BLOCK));
+    public static final Block RULE_ANCHOR = block("rule_anchor", RuleAnchorBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.GOLD).strength(5f, 1200f).requiresTool()
+                    .luminance(s -> 8).sounds(BlockSoundGroup.LODESTONE).pistonBehavior(PistonBehavior.BLOCK));
+    public static final Block CORE_OF_IDENTITY = block("core_of_identity", ChamberBlock::core,
+            AbstractBlock.Settings.create().mapColor(MapColor.WHITE).strength(8f, 1200f).requiresTool()
+                    .luminance(s -> 12).sounds(BlockSoundGroup.AMETHYST_BLOCK).pistonBehavior(PistonBehavior.BLOCK));
+    public static final Block GRAVITY_CHAMBER = block("gravity_chamber", ChamberBlock::gravity,
+            AbstractBlock.Settings.create().mapColor(MapColor.PURPLE).strength(5f, 1200f).requiresTool().luminance(s -> 6));
+    public static final Block TEMPORAL_CHAMBER = block("temporal_chamber", ChamberBlock::temporal,
+            AbstractBlock.Settings.create().mapColor(MapColor.GOLD).strength(5f, 1200f).requiresTool().luminance(s -> 6));
+    public static final Block DISTANCE_CHAMBER = block("distance_chamber", ChamberBlock::distance,
+            AbstractBlock.Settings.create().mapColor(MapColor.CYAN).strength(5f, 1200f).requiresTool().luminance(s -> 6));
+    public static final Block MEMORY_VAULT = block("memory_vault", MemoryVaultBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.BLACK).strength(5f, 1200f).requiresTool().luminance(s -> 4));
+    public static final Block POSSIBILITY_SPROUT = block("possibility_sprout", PossibilitySproutBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.MAGENTA).noCollision().breakInstantly().ticksRandomly()
+                    .luminance(s -> 7).sounds(BlockSoundGroup.CROP).pistonBehavior(PistonBehavior.DESTROY).nonOpaque(), false);
+    public static final Block WORKSHOP_WORLD = block("workshop_world", WorkshopBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.PALE_GREEN).strength(-1f, 3600000f).dropsNothing()
+                    .luminance(s -> 10).pistonBehavior(PistonBehavior.BLOCK), false);
     public static final Block RIFT = block("rift", RiftBlock::new,
             AbstractBlock.Settings.create().mapColor(MapColor.BLACK).strength(-1f, 3600000f).noCollision().dropsNothing()
                     .luminance(s -> 12).pistonBehavior(PistonBehavior.BLOCK), false);

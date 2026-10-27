@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "forgotten:concept_possibility",
+    "minecraft:wheat_seeds"
+  ],
+  "result": {
+    "id": "forgotten:possibility_seed",
+    "count": 4
+  }
+}

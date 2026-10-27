@@ -3,6 +3,7 @@ package dev.scripted.forgotten.registry;
 import dev.scripted.forgotten.Forgotten;
 import dev.scripted.forgotten.item.BreakpointWandItem;
 import dev.scripted.forgotten.item.CartridgeItem;
+import dev.scripted.forgotten.item.CodexFragmentItem;
 import dev.scripted.forgotten.item.CodexItem;
 import dev.scripted.forgotten.item.CrashCoreItem;
 import dev.scripted.forgotten.item.DnaStrandItem;
@@ -78,6 +79,10 @@ public final class ModItems {
     public static final Item UNWRITTEN_DEATH = item("unwritten_death", s -> new SimpleUseItem(s, SimpleUseItem.Kind.UNWRITTEN_DEATH),
             new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
 
+    public static final Item TOMORROW = item("tomorrow", s -> new SimpleUseItem(s, SimpleUseItem.Kind.TOMORROW), new Item.Settings().rarity(Rarity.RARE));
+    public static final Item CODEX_FRAGMENT = item("codex_fragment", CodexFragmentItem::new, new Item.Settings().maxCount(1).rarity(Rarity.RARE));
+    public static final Item POSSIBILITY_SEED = item("possibility_seed",
+            s -> new net.minecraft.item.BlockItem(ModBlocks.POSSIBILITY_SPROUT, s), new Item.Settings());
     public static final Item ONE_GRAVITY = item("one_gravity", s -> new SimpleUseItem(s, SimpleUseItem.Kind.ONE_GRAVITY), new Item.Settings());
 
     // ---- silicon and spores ----

@@ -75,6 +75,7 @@ public final class ForgottenCommand {
                     return 1;
                 })));
         AdminExtensions.register(admin);
+        dev.scripted.forgotten.system.Guilds.register(root);
         root.then(admin);
         dispatcher.register(root);
     }

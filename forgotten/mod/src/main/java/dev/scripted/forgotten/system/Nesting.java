@@ -77,7 +77,14 @@ public final class Nesting {
         ServerWorld world = Reality.world(player);
         int depth = Dimensions.depthOf(world);
         if (depth >= Depths.MAX) {
-            Texts.bar(player, Texts.warn("There is no copy of this copy. This is the Scratch Layer."));
+            ItemStack held = player.getMainHandStack();
+            String folded = held.get(dev.scripted.forgotten.registry.ModComponents.FOLDED);
+            if (held.isOf(dev.scripted.forgotten.registry.ModItems.FOLDED_MEMORY) && folded != null && folded.startsWith("minecraft:bedrock|")) {
+                held.decrementUnlessCreative(1, player);
+                Reality.player(player).depthStack.add(Rifts.point(world, Vec3d.ofBottomCenter(anchor.up())));
+                return workshop(player);
+            }
+            Texts.bar(player, Texts.warn("There is no copy of this copy. This is the Scratch Layer. (Something weightless and unbreakable might go further.)"));
             return false;
         }
         ServerWorld below = world.getServer().getWorld(Dimensions.depth(depth + 1));
@@ -107,6 +114,35 @@ public final class Nesting {
         Reality.chronicle(below, ChronicleEvent.DIMENSION_ENTERED, home, player.getName().getString(), "depth_" + (depth + 1));
         Reality.advance(player, depth + 1 >= Depths.MAX ? "scratch_layer" : "depth");
         symptoms(player, memory);
+        return true;
+    }
+
+    /** Where the Workshop is: a white room far out in the Archive's nothing. */
+    public static final BlockPos WORKSHOP = new BlockPos(100000, 100, 0);
+
+    /**
+     * Below the Scratch Layer, through a Frame Anchor made weightless and unbreakable, is the
+     * Workshop: a flat room with one workbench, and on it the real grass block.
+     */
+    static boolean workshop(ServerPlayerEntity player) {
+        ServerWorld room = player.getEntityWorld().getServer().getWorld(Dimensions.ARCHIVE);
+        if (room == null) {
+            return false;
+        }
+        WorldMemory memory = Reality.memory(room.getServer());
+        if (memory.setFlag("workshop_built")) {
+            for (int dx = -7; dx <= 7; dx++) {
+                for (int dz = -7; dz <= 7; dz++) {
+                    room.setBlockState(WORKSHOP.add(dx, -1, dz), Blocks.SMOOTH_QUARTZ.getDefaultState(), Block.NOTIFY_LISTENERS);
+                }
+            }
+            room.setBlockState(WORKSHOP, Blocks.CRAFTING_TABLE.getDefaultState(), Block.NOTIFY_ALL);
+            room.setBlockState(WORKSHOP.up(), ModBlocks.WORKSHOP_WORLD.getDefaultState(), Block.NOTIFY_ALL);
+        }
+        Travel.teleport(player, room, Vec3d.ofBottomCenter(WORKSHOP.add(0, 0, -4)), 0f, 0f);
+        Texts.tell(player, Texts.discovery("THE WORKSHOP"));
+        Texts.tell(player, Texts.world("One workbench. On it, a grass block. The real one. You have been inside someone else's Frame Anchor the whole time."));
+        Reality.advance(player, "the_workshop");
         return true;
     }
 

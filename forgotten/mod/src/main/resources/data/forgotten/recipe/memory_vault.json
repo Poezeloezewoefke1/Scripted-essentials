@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "QMQ",
+    "MCM",
+    "QMQ"
+  ],
+  "key": {
+    "Q": "minecraft:quartz_block",
+    "M": "forgotten:concept_memory",
+    "C": "minecraft:chest"
+  },
+  "result": {
+    "id": "forgotten:memory_vault",
+    "count": 1
+  }
+}

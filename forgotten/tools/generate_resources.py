@@ -81,6 +81,12 @@ ITEMS = {
                 lambda: T.block_icon(22, '#6d7a8a')),
     'silicon_wafer': ('Silicon Wafer', 'The medium a Compiler Chest writes programs onto.',
                       lambda: T.chip(23)),
+    'tomorrow': ('Tomorrow', 'From the Underdream. Use it and everything in this chunk advances exactly one day.',
+                 lambda: T.orb(37, '#ffd27a', glyph=37)),
+    'codex_fragment': ('Codex Fragment', 'Torn from a fallen Architect\'s Codex. Read it to borrow their rank for ten minutes.',
+                       lambda: T.scroll(38, ink='#7d3bd6')),
+    'possibility_seed': ('Possibility Seed', 'Plant it. It grows into one of the things it might have been.',
+                         lambda: T.seed_item(39, '#ff6af0')),
     'one_gravity': ('One (1) Gravity', 'Bought from the Draft. Use it and you have exactly one gravity again. Usually.',
                     lambda: T.orb(24, '#c0c0c0', glyph=24)),
     'dna_strand': ('DNA Strand', 'Use on a passive creature to splice it into a Bio-Node: its instincts are cut away and it waits for code.',
@@ -170,6 +176,25 @@ BLOCKS = {
                               model='cube_bottom_top', top=lambda: T.rune_block(127, '#f4f4f4', '#ffd27a'),
                               side=lambda: T.circuit(128, '#e8e8e8', '#c9a227'), bottom=lambda: T.noise_block(129, '#d8d8d8'),
                               loot='self', tools=['pickaxe'], level='diamond'),
+    'rule_anchor': dict(name='Rule Anchor', desc='Enforces one local law within 16 blocks: no PvP, no explosions, no monsters, or optional gravity. Use to choose. Reality Storms suspend it.',
+                        model='cube_bottom_top', multipart=True, top=lambda: T.rune_block(130, '#3a2a10', '#ffd27a'),
+                        side=lambda: T.rune_block(131, '#2a1f10', '#e6b84a'), bottom=lambda: T.noise_block(132, '#2a1f10'),
+                        loot='self', tools=['pickaxe'], level='iron'),
+    'core_of_identity': dict(name='Core of Identity', desc='The centre of a Reality Architecture. Chambers within 32 blocks answer to it.',
+                             model='cube', multipart=True, all=lambda: T.rune_block(133, '#f4f4f4', '#b48cff'),
+                             loot='self', tools=['pickaxe'], level='diamond'),
+    'gravity_chamber': dict(name='Gravity Chamber', desc='Within 6 blocks, things fall the way you set it: down, up, or nowhere. Needs a Core of Identity.',
+                            model='cube', multipart=True, all=lambda: T.rune_block(134, '#1d0f2e', '#5b6cff'), loot='self', tools=['pickaxe'], level='iron'),
+    'temporal_chamber': dict(name='Temporal Chamber', desc='Within 6 blocks, time runs four times as fast. Needs a Core of Identity.',
+                             model='cube', multipart=True, all=lambda: T.rune_block(135, '#2a1f10', '#ffe066'), loot='self', tools=['pickaxe'], level='iron'),
+    'distance_chamber': dict(name='Distance Chamber', desc='Join two with an ender pearl; step on one to step out of the other, anywhere. Needs a Core of Identity.',
+                             model='cube', multipart=True, all=lambda: T.rune_block(136, '#0f2a33', '#7fe3ff'), loot='self', tools=['pickaxe'], level='iron'),
+    'memory_vault': dict(name='Memory Vault', desc='Keep Memories here. It spends them to rebuild lost blocks within 16 blocks.',
+                         model='cube', all=lambda: T.circuit(137, '#0b0b10', '#b48cff'), loot='self', tools=['pickaxe']),
+    'possibility_sprout': dict(name='Possibility', desc='It has not decided what it will grow into.',
+                               model='cross', multipart=True, all=lambda: T.seed_item(138, '#ff6af0'), loot='none', tools=[]),
+    'workshop_world': dict(name='The World', desc='The real one.',
+                           model='cube', all=lambda: T.noise_block(139, '#5a9e3a', '#79c05a', 0.2, 0.05), loot='none', tools=[]),
     'rift': dict(name='Rift', desc='Where an Infinite Loop fell through the world.',
                  model='cube', all=lambda: T.static(126, '#05000a', '#5b2d8a'), loot='none', tools=[]),
 }
@@ -201,6 +226,14 @@ SHAPED = {
                                               'E': 'minecraft:ender_eye'}, 1),
     'genesis_interface': (['UPU', 'WNW', 'UPU'], {'U': 'forgotten:unwritten_fragment', 'P': 'forgotten:concept_possibility',
                                                   'W': 'forgotten:concept_witness', 'N': 'minecraft:nether_star'}, 1),
+    'rule_anchor': (['GCG', 'CLC', 'OOO'], {'G': 'minecraft:gold_ingot', 'C': 'forgotten:coherence_shard', 'L': 'minecraft:lodestone',
+                                           'O': 'minecraft:obsidian'}, 1),
+    'core_of_identity': (['QIQ', 'IAI', 'QIQ'], {'Q': 'minecraft:quartz_block', 'I': 'forgotten:concept_identity',
+                                                'A': 'forgotten:reality_anchor'}, 1),
+    'gravity_chamber': (['QGQ', 'GEG', 'QGQ'], {'Q': 'minecraft:quartz_block', 'G': 'forgotten:concept_gravity', 'E': 'forgotten:paradox_engine'}, 1),
+    'temporal_chamber': (['QCQ', 'CEC', 'QCQ'], {'Q': 'minecraft:quartz_block', 'C': 'forgotten:concept_recursion', 'E': 'minecraft:clock'}, 1),
+    'distance_chamber': (['QDQ', 'DEQ', 'QDQ'], {'Q': 'minecraft:quartz_block', 'D': 'forgotten:concept_distance', 'E': 'minecraft:ender_eye'}, 1),
+    'memory_vault': (['QMQ', 'MCM', 'QMQ'], {'Q': 'minecraft:quartz_block', 'M': 'forgotten:concept_memory', 'C': 'minecraft:chest'}, 1),
     'undefined_sword': (['N', 'N', 'S'], {'N': 'forgotten:null_shard', 'S': 'minecraft:netherite_ingot'}, 1),
     'nan_chestplate': (['N N', 'NIN', 'NNN'], {'N': 'forgotten:null_shard', 'I': 'minecraft:netherite_ingot'}, 1),
 }
@@ -212,6 +245,7 @@ SHAPELESS = {
     'paradox_fragment': (['forgotten:unremembered_thing'] * 4, 1),
     'lullaby': (['forgotten:lullaby_shard', 'forgotten:lullaby_shard', 'minecraft:note_block'], 1),
     'dna_strand': (['minecraft:fermented_spider_eye', 'minecraft:chorus_fruit', 'minecraft:glowstone_dust'], 2),
+    'possibility_seed': (['forgotten:concept_possibility', 'minecraft:wheat_seeds'], 4),
 }
 BLASTING = {
     'silicon': ('minecraft:sand', 0.2, 100),
@@ -287,6 +321,7 @@ ADVANCEMENTS = {
     'ending_author': ('Authored', 'Become the Author.', 'forgotten:architect_codex', 'boss_author'),
     'ending_merge': ('Merged', 'Become part of the world.', 'minecraft:lodestone', 'boss_author'),
     'ending_terminate': ('Run Again', 'End this run. The next world will remember it.', 'forgotten:null_shard', 'boss_author'),
+    'the_workshop': ('Someone Else\'s Frame Anchor', 'Reach the Workshop below the Scratch Layer.', 'minecraft:grass_block', 'scratch_layer'),
     'scratch_layer': ('The Scratch Layer', 'Reach the deepest copy, where generation has given up.', 'minecraft:tinted_glass', 'depth'),
 }
 
@@ -295,6 +330,8 @@ LANG_EXTRA = {
     'container.forgotten.paradox_engine': 'Paradox Engine',
     'container.forgotten.compiler_chest': 'Compiler Chest',
     'container.forgotten.genesis_interface': 'Genesis Interface',
+    'container.forgotten.memory_vault': 'Memory Vault',
+    'container.forgotten.workshop': 'The Workshop',
     'entity.forgotten.glitch_grenade': 'Glitch Grenade',
     'item.forgotten.memory.of': 'Memory of %s',
     'item.forgotten.folded_memory.of': 'Folded Memory of %s %s',
@@ -512,8 +549,17 @@ def main():
                 variants[f'identity={i}'] = {'model': f'{NS}:block/{block_id}_{i}'}
             write_json(f'{ASSETS}/blockstates/{block_id}.json', {'variants': variants})
             write_json(f'{ASSETS}/models/block/{block_id}.json', {'parent': f'{NS}:block/{block_id}_0'})
+        elif model == 'cross':
+            save_png(spec['all'](), f'{ASSETS}/textures/block/{block_id}.png')
+            write_json(f'{ASSETS}/models/block/{block_id}.json',
+                       {'parent': 'minecraft:block/cross', 'textures': {'cross': f'{NS}:block/{block_id}'}})
+            write_json(f'{ASSETS}/blockstates/{block_id}.json', {'variants': {'': {'model': f'{NS}:block/{block_id}'}}})
         else:
             raise ValueError(model)
+        if spec.get('multipart'):
+            write_json(f'{ASSETS}/blockstates/{block_id}.json', {'multipart': [{'apply': {'model': f'{NS}:block/{block_id}'}}]})
+            if model == 'cross':
+                layers[block_id] = 'cutout'
         item_model(block_id, model=f'{NS}:block/{block_id}')
         block_loot(block_id, spec['loot'])
         for tool in spec.get('tools', []):

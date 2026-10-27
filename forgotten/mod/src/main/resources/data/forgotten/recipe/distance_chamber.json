@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "QDQ",
+    "DEQ",
+    "QDQ"
+  ],
+  "key": {
+    "Q": "minecraft:quartz_block",
+    "D": "forgotten:concept_distance",
+    "E": "minecraft:ender_eye"
+  },
+  "result": {
+    "id": "forgotten:distance_chamber",
+    "count": 1
+  }
+}

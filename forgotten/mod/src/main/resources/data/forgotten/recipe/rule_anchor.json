@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GCG",
+    "CLC",
+    "OOO"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "C": "forgotten:coherence_shard",
+    "L": "minecraft:lodestone",
+    "O": "minecraft:obsidian"
+  },
+  "result": {
+    "id": "forgotten:rule_anchor",
+    "count": 1
+  }
+}

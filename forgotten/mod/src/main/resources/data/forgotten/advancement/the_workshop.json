@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.the_workshop.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.the_workshop.description"
+    },
+    "icon": {
+      "id": "minecraft:grass_block"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:scratch_layer"
+}
