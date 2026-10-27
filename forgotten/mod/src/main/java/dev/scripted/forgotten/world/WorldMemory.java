@@ -55,6 +55,8 @@ public final class WorldMemory extends PersistentState {
     /** Where the Archive assembled itself, or null. */
     public long archivePos = Long.MIN_VALUE;
     public String archiveDimension = "";
+    /** Recent things players said, kept for the palimpsest. */
+    public final List<String> lines = new ArrayList<>();
 
     public WorldMemory() {
         this.lucidity = new LucidityLedger();
@@ -163,6 +165,14 @@ public final class WorldMemory extends PersistentState {
         markDirty();
     }
 
+    public void said(String line) {
+        lines.add(line);
+        while (lines.size() > 40) {
+            lines.remove(0);
+        }
+        markDirty();
+    }
+
     public boolean storming(long now) {
         return now < stormEnds;
     }
@@ -222,6 +232,7 @@ public final class WorldMemory extends PersistentState {
         nbt.putInt("nextFrameId", nextFrameId);
         nbt.putLong("archivePos", archivePos);
         nbt.putString("archiveDim", archiveDimension);
+        nbt.put("lines", strings(lines));
         return nbt;
     }
 
@@ -276,6 +287,7 @@ public final class WorldMemory extends PersistentState {
         m.nextFrameId = nbt.getInt("nextFrameId", 1);
         m.archivePos = nbt.getLong("archivePos", Long.MIN_VALUE);
         m.archiveDimension = nbt.getString("archiveDim", "");
+        m.lines.addAll(readStrings(nbt, "lines"));
         return m;
     }
 

@@ -60,7 +60,12 @@ public final class Directors {
         }
         if (now % 100 == 0) {
             FirstSigns.tick(server.getOverworld(), now);
+            for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+                MemoryBleed.tick(Reality.world(player), player, now);
+                Palimpsests.tick(Reality.world(player), player);
+            }
         }
+        StormDirector.tick(server, now);
     }
 
     static void perPlayer(ServerPlayerEntity player, long now) {

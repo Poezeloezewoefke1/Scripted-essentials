@@ -18,3 +18,6 @@ accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntit
 
 # Time dilation in the nested depths runs block entity tickers extra times.
 accessible field net/minecraft/world/World blockEntityTickers Ljava/util/List;
+
+# Puppets (the Second You, Echoes, death replays) wear a player's skin through a Mannequin's profile.
+accessible method net/minecraft/entity/decoration/MannequinEntity setMannequinProfile (Lnet/minecraft/component/type/ProfileComponent;)V

@@ -110,6 +110,9 @@ public final class Hooks {
         });
         ServerTickEvents.END_SERVER_TICK.register(Directors::tick);
         DebtDirector.init();
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> Palimpsests.load());
+        net.fabricmc.fabric.api.message.v1.ServerMessageEvents.CHAT_MESSAGE.register((message, sender, params) ->
+                Reality.memory(Reality.world(sender).getServer()).said(sender.getName().getString() + ": " + message.getContent().getString()));
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             Scheduler.clear();
             TRAIL.clear();

@@ -136,6 +136,13 @@ public final class Glitches {
                 if (player != null) {
                     mob.getNavigation().stop();
                     mob.getLookControl().lookAt(player, 30f, 30f);
+                    if (world.getRandom().nextInt(200) == 0 && player instanceof net.minecraft.server.network.ServerPlayerEntity sp) {
+                        String line = Palimpsests.randomLine(world.getRandom());
+                        if (line != null) {
+                            dev.scripted.forgotten.util.Texts.bar(sp, net.minecraft.text.Text.literal("<" + mob.getType().getName().getString() + "> ")
+                                    .append(dev.scripted.forgotten.util.Texts.world(line)));
+                        }
+                    }
                 }
             }
             case ARCHIVIST -> {
