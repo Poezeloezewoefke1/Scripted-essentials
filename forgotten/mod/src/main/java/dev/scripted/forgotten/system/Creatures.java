@@ -340,7 +340,9 @@ public final class Creatures {
 
     /** A Bloom Creeper about to explode flowers instead. */
     static void bloom(ServerWorld world, CreeperEntity creeper) {
-        if (creeper.getFuseSpeed() <= 0 || creeper.currentFuseTime < creeper.fuseTime - 6) {
+        // The fuse only climbs while the creeper is about to go off. (Its fuse speed is no use
+        // here: the ignite goal resets it to -1 after the creeper's own tick has used it.)
+        if (creeper.currentFuseTime < creeper.fuseTime - 6) {
             return;
         }
         BlockPos center = creeper.getBlockPos();
