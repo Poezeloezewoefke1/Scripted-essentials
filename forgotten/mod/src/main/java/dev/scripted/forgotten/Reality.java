@@ -32,6 +32,11 @@ public final class Reality {
     private Reality() {
     }
 
+    /** The world a player is in. */
+    public static ServerWorld world(ServerPlayerEntity player) {
+        return (ServerWorld) player.getEntityWorld();
+    }
+
     public static WorldMemory memory(MinecraftServer server) {
         return WorldMemory.get(server);
     }
@@ -106,25 +111,25 @@ public final class Reality {
         if (amount <= 0) {
             return;
         }
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = Reality.world(player);
         double cost = amount * CausalDebt.finalityMultiplier(world.getRegistryKey() == World.END)
                 * CausalDebt.endingMultiplier(ending(world.getServer()) == Ending.PRESERVE);
         player(player).owe(cost, now(world.getServer()));
     }
 
     public static void insight(ServerPlayerEntity player, Insight kind) {
-        ArchitectRank next = player(player).gain(kind, now(player.getServerWorld().getServer()));
+        ArchitectRank next = player(player).gain(kind, now(Reality.world(player).getServer()));
         if (next != null) {
             Texts.tell(player, Texts.discovery("ARCHITECT RANK " + next.level() + ": " + next.title().toUpperCase()));
             Texts.tell(player, Texts.world(next.power()));
-            player.getServerWorld().playSound(null, player.getX(), player.getY(), player.getZ(),
+            Reality.world(player).playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.PLAYERS, 0.8f, 1.4f);
             advance(player, "rank_" + next.level());
         }
     }
 
     public static ArchitectRank rank(ServerPlayerEntity player) {
-        return player(player).rank(now(player.getServerWorld().getServer()));
+        return player(player).rank(now(Reality.world(player).getServer()));
     }
 
     /** Records a significant event in the world's chronicle; it also wakes the world. */
@@ -142,7 +147,7 @@ public final class Reality {
 
     /** Grants one of the mod's advancements (they use impossible criteria named "done"). */
     public static void advance(ServerPlayerEntity player, String name) {
-        MinecraftServer server = player.getServerWorld().getServer();
+        MinecraftServer server = Reality.world(player).getServer();
         AdvancementEntry entry = server.getAdvancementLoader().get(Forgotten.id(name));
         if (entry != null) {
             player.getAdvancementTracker().grantCriterion(entry, "done");

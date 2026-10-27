@@ -27,7 +27,7 @@ public final class ForgottenCommand {
         LiteralArgumentBuilder<ServerCommandSource> root = CommandManager.literal("forgotten");
         root.then(CommandManager.literal("codex").executes(ctx -> {
             ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
-            CodexItem.report(player, player.getServerWorld());
+            CodexItem.report(player, Reality.world(player));
             return 1;
         }));
         LiteralArgumentBuilder<ServerCommandSource> admin = CommandManager.literal("admin")
@@ -45,7 +45,7 @@ public final class ForgottenCommand {
                 .executes(ctx -> {
                     ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
                     int v = IntegerArgumentType.getInteger(ctx, "value");
-                    Reality.setIntegrity(player.getServerWorld(), player.getBlockPos(), v);
+                    Reality.setIntegrity(Reality.world(player), player.getBlockPos(), v);
                     ctx.getSource().sendFeedback(() -> Text.literal("This chunk's integrity is now " + v + " (" + IntegrityStage.of(v).title() + ")"), true);
                     return 1;
                 })));
@@ -59,7 +59,7 @@ public final class ForgottenCommand {
                 })));
         admin.then(CommandManager.literal("cube").executes(ctx -> {
             ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
-            FirstSigns.spawn(player.getServerWorld(), player, Reality.now(ctx.getSource().getServer()));
+            FirstSigns.spawn(Reality.world(player), player, Reality.now(ctx.getSource().getServer()));
             return 1;
         }));
         admin.then(CommandManager.literal("insight").then(CommandManager.argument("amount", IntegerArgumentType.integer(0))

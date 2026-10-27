@@ -1,5 +1,6 @@
 package dev.scripted.forgotten.system;
 
+import dev.scripted.forgotten.Reality;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
@@ -9,7 +10,7 @@ public final class AnomalyCommands {
     }
 
     public static boolean force(ServerPlayerEntity player, int stage) {
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = Reality.world(player);
         var random = world.getRandom();
         for (int attempt = 0; attempt < 8; attempt++) {
             boolean ok = switch (stage) {

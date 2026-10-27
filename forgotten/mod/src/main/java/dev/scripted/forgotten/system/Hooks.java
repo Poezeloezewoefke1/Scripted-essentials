@@ -104,6 +104,8 @@ public final class Hooks {
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             Scheduler.clear();
             TRAIL.clear();
+            ObserverDirector.clear();
+            FirstSigns.reset();
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ForgottenCommand.register(dispatcher));
     }
@@ -162,7 +164,7 @@ public final class Hooks {
             return true;
         }
         PlayerMemory memory = Reality.player(player);
-        long now = Reality.now(player.getServerWorld().getServer());
+        long now = Reality.now(Reality.world(player).getServer());
         if (now < memory.deathlessUntil) {
             Vec3d back = rewindPoint(player);
             player.requestTeleport(back.x, back.y, back.z);
@@ -171,7 +173,7 @@ public final class Hooks {
             player.extinguish();
             Reality.debt(player, 20);
             Texts.bar(player, Texts.glitch("REJECTED") .append(Texts.world(" The world refuses the event that would have killed you.")));
-            Reality.chronicle(player.getServerWorld(), ChronicleEvent.REALITY_EDIT, player.getBlockPos(),
+            Reality.chronicle(Reality.world(player), ChronicleEvent.REALITY_EDIT, player.getBlockPos(),
                     player.getName().getString(), "death rejected: " + source.getName());
             return false;
         }
@@ -219,9 +221,10 @@ public final class Hooks {
     }
 
     static void woke(ServerPlayerEntity player, BlockPos bed) {
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = Reality.world(player);
         Reality.chronicle(world, ChronicleEvent.SLEPT, bed, player.getName().getString(), "");
         PlayerMemory memory = Reality.player(player);
+        memory.bed = bed.asLong();
         if (memory.hollowCursed) {
             memory.hollowCursed = false;
             Texts.tell(player, Texts.world("You wake, and your hands remember how to hold things."));

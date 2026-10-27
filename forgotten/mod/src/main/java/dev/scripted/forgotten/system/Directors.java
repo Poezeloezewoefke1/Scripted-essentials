@@ -33,6 +33,11 @@ public final class Directors {
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             Hooks.trail(player);
         }
+        if (now % 10 == 0) {
+            for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+                ObserverDirector.tick(Reality.world(player), player, now);
+            }
+        }
         if (now % 20 == 0) {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 perPlayer(player, now);
@@ -46,6 +51,7 @@ public final class Directors {
                 integrity(world);
                 for (ServerPlayerEntity player : world.getPlayers()) {
                     Anomalies.roll(world, player);
+                    WakingDirector.tick(world, player, now);
                 }
                 Anomalies.thaw(world, now);
             }
@@ -57,7 +63,7 @@ public final class Directors {
 
     static void perPlayer(ServerPlayerEntity player, long now) {
         PlayerMemory memory = Reality.player(player);
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = Reality.world(player);
         memory.debt = CausalDebt.afterTime(memory.debt, memory.lastEdit, now, 20);
         if (now % 600 == 0) {
             BlockPos pos = player.getBlockPos();

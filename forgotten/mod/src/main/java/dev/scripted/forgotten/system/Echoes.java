@@ -53,7 +53,7 @@ public final class Echoes {
             echo.setPersistent();
             world.spawnEntity(echo);
             ServerPlayerEntity back = world.getServer().getPlayerManager().getPlayer(player.getUuid());
-            if (back != null && back.getServerWorld() == world) {
+            if (back != null && Reality.world(back) == world) {
                 Texts.tell(back, Texts.world("The Nether has not forgotten how you died here."));
             }
         });

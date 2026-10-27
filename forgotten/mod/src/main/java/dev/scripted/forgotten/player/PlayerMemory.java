@@ -55,6 +55,8 @@ public final class PlayerMemory {
     public long mercyUntil;
     public int deaths;
     public long lastSpoke = Long.MIN_VALUE / 2;
+    /** Where the player last slept. */
+    public long bed = Long.MIN_VALUE;
 
     public PlayerMemory() {
         this(new Journal(), new ObserverMind());
@@ -179,6 +181,7 @@ public final class PlayerMemory {
         nbt.putLong("mercyUntil", mercyUntil);
         nbt.putInt("deaths", deaths);
         nbt.putLong("lastSpoke", lastSpoke);
+        nbt.putLong("bed", bed);
         return nbt;
     }
 
@@ -233,6 +236,7 @@ public final class PlayerMemory {
         m.mercyUntil = nbt.getLong("mercyUntil", 0);
         m.deaths = nbt.getInt("deaths", 0);
         m.lastSpoke = nbt.getLong("lastSpoke", Long.MIN_VALUE / 2);
+        m.bed = nbt.getLong("bed", Long.MIN_VALUE);
         return m;
     }
 

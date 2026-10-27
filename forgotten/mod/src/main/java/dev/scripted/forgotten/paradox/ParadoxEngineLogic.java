@@ -148,7 +148,7 @@ public final class ParadoxEngineLogic {
         }
         Reality.debt(player, plan.debt());
         Reality.insight(player, Insight.REALITY_EDIT);
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = Reality.world(player);
         BlockPos pos = engine.getPos();
         Reality.paradox(world, pos, (int) Math.ceil(plan.debt() / 2));
         if (plan.debt() >= 10) {
