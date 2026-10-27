@@ -47,6 +47,10 @@ public final class ModAttachments {
     public static final AttachmentType<Boolean> PROVOKED = AttachmentRegistry.create(Forgotten.id("provoked"),
             b -> b.persistent(Codec.BOOL));
 
+    /** Marks a Mannequin the mod is puppeteering: "kind;owner-uuid". */
+    public static final AttachmentType<String> PUPPET = AttachmentRegistry.create(Forgotten.id("puppet"),
+            b -> b.persistent(Codec.STRING));
+
     private ModAttachments() {
     }
 

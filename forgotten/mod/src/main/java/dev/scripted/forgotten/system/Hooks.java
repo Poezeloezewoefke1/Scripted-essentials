@@ -89,7 +89,15 @@ public final class Hooks {
                 woke(player, sleepingPos);
             }
         });
-        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> Glitches.track(entity));
+        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+            Glitches.track(entity);
+            Puppets.adopt(entity);
+            if (entity.getCommandTags().contains(dev.scripted.forgotten.util.Displays.TAG)
+                    && !dev.scripted.forgotten.util.Displays.LIVE.contains(entity.getUuid())) {
+                // Displays are never meant to outlive the moment that made them.
+                entity.discard();
+            }
+        });
         ServerEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
             Glitches.untrack(entity);
             if (entity instanceof ItemEntity item && entity.getRemovalReason() == Entity.RemovalReason.KILLED) {
@@ -101,10 +109,12 @@ public final class Hooks {
             }
         });
         ServerTickEvents.END_SERVER_TICK.register(Directors::tick);
+        DebtDirector.init();
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             Scheduler.clear();
             TRAIL.clear();
             ObserverDirector.clear();
+            Puppets.clear();
             FirstSigns.reset();
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ForgottenCommand.register(dispatcher));
@@ -184,6 +194,7 @@ public final class Hooks {
         if (!(entity.getEntityWorld() instanceof ServerWorld world)) {
             return;
         }
+        Puppets.onDeath(entity, source);
         BlockPos pos = entity.getBlockPos();
         if (entity instanceof ServerPlayerEntity player) {
             PlayerMemory memory = Reality.player(player);
@@ -193,6 +204,9 @@ public final class Hooks {
             String held = Registries.ITEM.getId(player.getMainHandStack().getItem()).toString();
             Reality.chronicle(world, ChronicleEvent.PLAYER_DIED, pos, player.getName().getString(), source.getName() + "|" + held);
             Echoes.onPlayerDeath(world, player, source);
+            if (memory.tier() == dev.scripted.forgotten.logic.paradox.DebtTier.BLEED) {
+                Puppets.spawn(world, player, Puppets.Kind.ECHO, player.getEntityPos());
+            }
             return;
         }
         if (entity instanceof EnderDragonEntity) {

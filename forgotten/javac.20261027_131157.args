@@ -1,0 +1,6 @@
+-proc:none
+-Xmaxerrs
+100000
+-d
+/tmp/tmp.wJwUmveQsG/classes
+@/tmp/tmp.wJwUmveQsG/sources.txt

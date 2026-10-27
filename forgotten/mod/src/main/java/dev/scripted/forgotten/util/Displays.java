@@ -20,6 +20,8 @@ import org.joml.Vector3f;
 public final class Displays {
     /** Tag on every display the mod spawns, so strays can be cleaned up after a restart. */
     public static final String TAG = "forgotten_display";
+    /** Displays spawned this session. A tagged display not in here was loaded from an old save. */
+    public static final java.util.Set<java.util.UUID> LIVE = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
     private Displays() {
     }
@@ -39,6 +41,7 @@ public final class Displays {
         d.setViewRange(4.0f);
         d.refreshPositionAndAngles(pos.x, pos.y, pos.z, 0, 0);
         d.addCommandTag(TAG);
+        LIVE.add(d.getUuid());
         world.spawnEntity(d);
         return d;
     }
@@ -56,6 +59,7 @@ public final class Displays {
         d.setGlowColorOverride(0xB48CFF);
         d.refreshPositionAndAngles(pos.getX(), pos.getY(), pos.getZ(), 0, 0);
         d.addCommandTag(TAG);
+        LIVE.add(d.getUuid());
         world.spawnEntity(d);
         return d;
     }
@@ -70,6 +74,7 @@ public final class Displays {
         d.setBillboardMode(DisplayEntity.BillboardMode.CENTER);
         d.refreshPositionAndAngles(pos.x, pos.y, pos.z, 0, 0);
         d.addCommandTag(TAG);
+        LIVE.add(d.getUuid());
         world.spawnEntity(d);
         return d;
     }
@@ -84,6 +89,7 @@ public final class Displays {
         d.setBillboardMode(DisplayEntity.BillboardMode.CENTER);
         d.refreshPositionAndAngles(pos.x, pos.y, pos.z, 0, 0);
         d.addCommandTag(TAG);
+        LIVE.add(d.getUuid());
         world.spawnEntity(d);
         return d;
     }

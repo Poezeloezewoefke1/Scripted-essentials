@@ -30,6 +30,7 @@ public final class Directors {
         Scheduler.tick();
         long now = Reality.now(server);
         Glitches.tick(now);
+        Puppets.tick(server);
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             Hooks.trail(player);
         }
@@ -52,6 +53,7 @@ public final class Directors {
                 for (ServerPlayerEntity player : world.getPlayers()) {
                     Anomalies.roll(world, player);
                     WakingDirector.tick(world, player, now);
+                    DebtDirector.tick(world, player, now);
                 }
                 Anomalies.thaw(world, now);
             }
@@ -64,6 +66,7 @@ public final class Directors {
     static void perPlayer(ServerPlayerEntity player, long now) {
         PlayerMemory memory = Reality.player(player);
         ServerWorld world = Reality.world(player);
+        Puppets.applyHollowCurse(player);
         memory.debt = CausalDebt.afterTime(memory.debt, memory.lastEdit, now, 20);
         if (now % 600 == 0) {
             BlockPos pos = player.getBlockPos();

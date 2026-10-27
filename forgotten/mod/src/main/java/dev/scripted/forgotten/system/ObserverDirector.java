@@ -118,7 +118,7 @@ public final class ObserverDirector {
         look = look.normalize();
         double distance = mind.distance();
         // Bias toward a place the player keeps returning to, if one is roughly ahead.
-        long haunt = mind.chooseHaunt(world.getRandom(), ChunkPos.toLong(player.getBlockPos()));
+        long haunt = mind.chooseHaunt(new java.util.SplittableRandom(world.getRandom().nextLong()), ChunkPos.toLong(player.getBlockPos()));
         ChunkPos hc = new ChunkPos(haunt);
         Vec3d toHaunt = new Vec3d(hc.getCenterX() - player.getX(), 0, hc.getCenterZ() - player.getZ());
         Vec3d dir = look;
