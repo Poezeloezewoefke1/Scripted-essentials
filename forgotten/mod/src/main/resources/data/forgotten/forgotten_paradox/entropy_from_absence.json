@@ -1,0 +1,10 @@
+{
+  "subject": "forgotten:concept_absence",
+  "contradiction": "minecraft:gunpowder",
+  "result": {
+    "id": "forgotten:entropy_shard",
+    "count": 4
+  },
+  "debt": 4,
+  "rank": 1
+}

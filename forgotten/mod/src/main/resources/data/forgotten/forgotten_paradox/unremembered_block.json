@@ -1,0 +1,10 @@
+{
+  "subject": "forgotten:unremembered_thing",
+  "contradiction": "forgotten:concept_identity",
+  "result": {
+    "id": "forgotten:unremembered_block",
+    "count": 4
+  },
+  "debt": 4,
+  "rank": 2
+}

@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:redstone_block"
+  },
+  "contradiction": "forgotten:concept_recursion",
+  "result": {
+    "id": "forgotten:data_block",
+    "count": 8
+  },
+  "debt": 3,
+  "rank": 2
+}

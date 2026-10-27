@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "forgotten:paradox_fragment",
+    "minecraft:amethyst_shard",
+    "minecraft:quartz"
+  ],
+  "result": {
+    "id": "forgotten:coherence_shard",
+    "count": 2
+  }
+}

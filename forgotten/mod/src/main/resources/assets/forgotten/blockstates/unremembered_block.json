@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "identity=0": {
+      "model": "forgotten:block/unremembered_block_0"
+    },
+    "identity=1": {
+      "model": "forgotten:block/unremembered_block_1"
+    },
+    "identity=2": {
+      "model": "forgotten:block/unremembered_block_2"
+    },
+    "identity=3": {
+      "model": "forgotten:block/unremembered_block_3"
+    },
+    "identity=4": {
+      "model": "forgotten:block/unremembered_block_4"
+    },
+    "identity=5": {
+      "model": "forgotten:block/unremembered_block_5"
+    },
+    "identity=6": {
+      "model": "forgotten:block/unremembered_block_6"
+    },
+    "identity=7": {
+      "model": "forgotten:block/unremembered_block_7"
+    }
+  }
+}

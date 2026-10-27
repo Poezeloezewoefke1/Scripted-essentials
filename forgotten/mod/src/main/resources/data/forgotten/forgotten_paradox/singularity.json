@@ -1,0 +1,10 @@
+{
+  "subject": "forgotten:concept_gravity",
+  "contradiction": "forgotten:concept_recursion",
+  "result": {
+    "id": "forgotten:singularity"
+  },
+  "debt": 20,
+  "rank": 3,
+  "ordered": false
+}

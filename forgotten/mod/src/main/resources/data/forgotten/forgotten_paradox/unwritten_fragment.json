@@ -1,0 +1,9 @@
+{
+  "subject": "forgotten:unwritten_stone",
+  "contradiction": "forgotten:concept_possibility",
+  "result": {
+    "id": "forgotten:unwritten_fragment"
+  },
+  "debt": 15,
+  "rank": 4
+}

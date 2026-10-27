@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.paradox_engine.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.paradox_engine.description"
+    },
+    "icon": {
+      "id": "forgotten:paradox_engine"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:first_world_fragment"
+}

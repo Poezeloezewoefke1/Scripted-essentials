@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "forgotten:sky"
+  },
+  "contradiction": "minecraft:glass",
+  "result": {
+    "id": "forgotten:sky_fragment",
+    "count": 4
+  },
+  "debt": 2,
+  "rank": 1
+}

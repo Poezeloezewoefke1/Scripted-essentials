@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AMA",
+    "CTR",
+    "OOO"
+  ],
+  "key": {
+    "A": "minecraft:amethyst_block",
+    "M": "forgotten:memory_of_the_first_world",
+    "C": "minecraft:clock",
+    "T": "minecraft:crafting_table",
+    "R": "minecraft:rotten_flesh",
+    "O": "minecraft:obsidian"
+  },
+  "result": {
+    "id": "forgotten:paradox_engine",
+    "count": 1
+  }
+}

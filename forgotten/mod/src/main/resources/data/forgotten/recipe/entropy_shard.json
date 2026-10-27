@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "forgotten:paradox_fragment",
+    "minecraft:gunpowder",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "forgotten:entropy_shard",
+    "count": 2
+  }
+}

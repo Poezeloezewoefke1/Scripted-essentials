@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "dev.scripted.forgotten.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
+  "mixins": [
+    "BlockItemMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

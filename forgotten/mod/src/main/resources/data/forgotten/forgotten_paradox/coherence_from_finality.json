@@ -1,0 +1,10 @@
+{
+  "subject": "forgotten:concept_finality",
+  "contradiction": "minecraft:quartz",
+  "result": {
+    "id": "forgotten:coherence_shard",
+    "count": 4
+  },
+  "debt": 0,
+  "rank": 1
+}

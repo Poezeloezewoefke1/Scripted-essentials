@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "forgotten:unremembered_thing",
+    "forgotten:unremembered_thing",
+    "forgotten:unremembered_thing",
+    "forgotten:unremembered_thing"
+  ],
+  "result": {
+    "id": "forgotten:paradox_fragment",
+    "count": 1
+  }
+}

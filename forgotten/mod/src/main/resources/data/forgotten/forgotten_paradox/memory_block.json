@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:obsidian"
+  },
+  "contradiction": "forgotten:concept_memory",
+  "result": {
+    "id": "forgotten:memory_block",
+    "count": 8
+  },
+  "debt": 2,
+  "rank": 2
+}

@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:creeper"
+  },
+  "contradiction": "minecraft:oak_log",
+  "result": {
+    "id": "forgotten:volatile_log",
+    "count": 4
+  },
+  "debt": 6,
+  "rank": 2
+}

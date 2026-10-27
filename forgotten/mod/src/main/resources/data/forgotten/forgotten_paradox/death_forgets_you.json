@@ -1,0 +1,15 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:respawn_anchor"
+  },
+  "contradiction": {
+    "item": "forgotten:memory",
+    "memory": "forgotten:king_of_yesterday"
+  },
+  "result": {
+    "id": "forgotten:unwritten_death"
+  },
+  "debt": 40,
+  "rank": 4
+}

@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.rank_2.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.rank_2.description"
+    },
+    "icon": {
+      "id": "forgotten:patch_notes"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:lens"
+}

@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:glass"
+  },
+  "contradiction": "forgotten:concept_identity",
+  "result": {
+    "id": "forgotten:marrowglass",
+    "count": 8
+  },
+  "debt": 5,
+  "rank": 2
+}

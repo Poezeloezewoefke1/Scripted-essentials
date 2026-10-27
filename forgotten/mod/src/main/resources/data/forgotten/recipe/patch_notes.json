@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "forgotten:coherence_shard"
+  ],
+  "result": {
+    "id": "forgotten:patch_notes",
+    "count": 2
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:water"
+  },
+  "contradiction": {
+    "item": "forgotten:memory",
+    "memory": "forgotten:sky"
+  },
+  "result": {
+    "id": "forgotten:rule_scroll",
+    "data": "sky_water"
+  },
+  "debt": 25,
+  "rank": 3
+}

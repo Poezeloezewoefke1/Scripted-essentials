@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:book"
+  },
+  "contradiction": "forgotten:coherence_shard",
+  "result": {
+    "id": "forgotten:patch_notes",
+    "count": 4
+  },
+  "debt": 0,
+  "rank": 1
+}

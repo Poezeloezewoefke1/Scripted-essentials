@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:book",
+    "minecraft:amethyst_shard",
+    "minecraft:compass"
+  ],
+  "result": {
+    "id": "forgotten:architect_codex",
+    "count": 1
+  }
+}

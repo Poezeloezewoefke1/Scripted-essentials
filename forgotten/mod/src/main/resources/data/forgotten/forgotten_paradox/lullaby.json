@@ -1,0 +1,10 @@
+{
+  "subject": "forgotten:lullaby_shard",
+  "contradiction": "forgotten:concept_silence",
+  "result": {
+    "id": "forgotten:lullaby",
+    "count": 2
+  },
+  "debt": 1,
+  "rank": 1
+}

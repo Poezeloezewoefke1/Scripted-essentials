@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "RAR"
+  ],
+  "key": {
+    "S": "forgotten:silicon",
+    "R": "minecraft:redstone",
+    "A": "minecraft:amethyst_shard"
+  },
+  "result": {
+    "id": "forgotten:silicon_wafer",
+    "count": 3
+  }
+}

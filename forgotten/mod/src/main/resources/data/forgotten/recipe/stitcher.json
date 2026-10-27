@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "C",
+    "I",
+    "S"
+  ],
+  "key": {
+    "C": "forgotten:coherence_shard",
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "forgotten:stitcher",
+    "count": 1
+  }
+}

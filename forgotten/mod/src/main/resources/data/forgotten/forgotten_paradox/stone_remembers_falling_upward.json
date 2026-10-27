@@ -1,0 +1,13 @@
+{
+  "subject": {
+    "item": "forgotten:memory",
+    "memory": "minecraft:stone"
+  },
+  "contradiction": "forgotten:concept_gravity",
+  "result": {
+    "id": "forgotten:rule_scroll",
+    "data": "lift"
+  },
+  "debt": 20,
+  "rank": 3
+}

@@ -1,0 +1,10 @@
+{
+  "subject": "forgotten:concept_hunger",
+  "contradiction": "forgotten:concept_possibility",
+  "result": {
+    "id": "forgotten:possibility_eater"
+  },
+  "debt": 15,
+  "rank": 3,
+  "ordered": false
+}

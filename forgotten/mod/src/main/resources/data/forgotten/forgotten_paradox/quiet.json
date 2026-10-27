@@ -1,0 +1,11 @@
+{
+  "subject": "forgotten:concept_silence",
+  "contradiction": "forgotten:concept_absence",
+  "result": {
+    "id": "forgotten:quiet",
+    "count": 4
+  },
+  "debt": 3,
+  "rank": 1,
+  "ordered": false
+}

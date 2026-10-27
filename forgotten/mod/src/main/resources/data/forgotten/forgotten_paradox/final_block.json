@@ -1,0 +1,11 @@
+{
+  "subject": "forgotten:concept_identity",
+  "contradiction": "forgotten:concept_finality",
+  "result": {
+    "id": "forgotten:final_block",
+    "count": 4
+  },
+  "debt": 8,
+  "rank": 2,
+  "ordered": false
+}

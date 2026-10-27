@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "P",
+    "I",
+    "S"
+  ],
+  "key": {
+    "P": "forgotten:paradox_fragment",
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "forgotten:destabilizer",
+    "count": 1
+  }
+}

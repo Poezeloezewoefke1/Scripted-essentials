@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.rank_5.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.rank_5.description"
+    },
+    "icon": {
+      "id": "forgotten:singularity"
+    },
+    "frame": "goal"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:rank_4"
+}

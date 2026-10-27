@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "CLC",
+    "OOO"
+  ],
+  "key": {
+    "C": "forgotten:coherence_shard",
+    "L": "minecraft:lodestone",
+    "O": "minecraft:obsidian"
+  },
+  "result": {
+    "id": "forgotten:reality_anchor",
+    "count": 1
+  }
+}

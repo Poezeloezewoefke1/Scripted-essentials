@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "forgotten:lullaby_shard",
+    "forgotten:lullaby_shard",
+    "minecraft:note_block"
+  ],
+  "result": {
+    "id": "forgotten:lullaby",
+    "count": 1
+  }
+}

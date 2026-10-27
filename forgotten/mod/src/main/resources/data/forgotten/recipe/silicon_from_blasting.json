@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "minecraft:sand",
+  "experience": 0.2,
+  "cookingtime": 100,
+  "result": {
+    "id": "forgotten:silicon"
+  }
+}

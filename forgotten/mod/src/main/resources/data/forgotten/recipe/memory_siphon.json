@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "G",
+    "C",
+    "S"
+  ],
+  "key": {
+    "G": "minecraft:glass_bottle",
+    "C": "minecraft:copper_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "forgotten:memory_siphon",
+    "count": 1
+  }
+}
