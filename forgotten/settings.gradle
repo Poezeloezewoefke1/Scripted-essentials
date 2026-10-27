@@ -1,0 +1,21 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'forgotten'
+
+// Platform-free game logic. Builds and tests anywhere Maven Central is reachable.
+include 'logic'
+
+// The Fabric mod needs Minecraft itself (piston-data.mojang.com) and Fabric's Maven. Pass
+// -PskipMinecraft=true to build only the logic module where those hosts are unreachable.
+if (providers.gradleProperty('skipMinecraft').getOrElse('false') != 'true') {
+    include 'mod'
+}

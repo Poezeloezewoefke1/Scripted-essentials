@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "forgotten",
+  "version": "${version}",
+  "name": "The World That Forgot Itself",
+  "description": "Reality is forgetting its own rules. Remember them, rewrite them, or let them go.",
+  "authors": ["Scripted"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.scripted.forgotten.Forgotten"],
+    "client": ["dev.scripted.forgotten.client.ForgottenClient"],
+    "fabric-gametest": ["dev.scripted.forgotten.gametest.ForgottenGameTests"]
+  },
+  "mixins": [
+    "forgotten.mixins.json",
+    {"config": "forgotten.client.mixins.json", "environment": "client"}
+  ],
+  "accessWidener": "forgotten.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

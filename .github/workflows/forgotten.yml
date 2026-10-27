@@ -1,0 +1,71 @@
+name: Forgotten mod (Fabric 1.21.11)
+
+# Builds and tests the Fabric mod in forgotten/. This is the only place the mod itself is
+# compiled: its development environment cannot reach maven.fabricmc.net or Mojang's servers,
+# which Loom needs for Minecraft, mappings and Fabric. The logic module's unit tests run here
+# too, and a dedicated server is booted with the mod to run its game tests.
+
+on:
+  push:
+    branches: ['main', 'claude/**']
+    paths: ['forgotten/**', '.github/workflows/forgotten.yml']
+  pull_request:
+    paths: ['forgotten/**', '.github/workflows/forgotten.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: forgotten
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Record the toolchain versions being built against
+        run: |
+          echo "commit: $GITHUB_SHA"
+          grep -E '^(minecraft_version|yarn_mappings|loader_version|loom_version|fabric_api_version)=' gradle.properties
+          echo "latest published Yarn builds for 1.21.11:"
+          curl -fsS https://maven.fabricmc.net/net/fabricmc/yarn/maven-metadata.xml | grep -o '1\.21\.11+build\.[0-9]*' | sort -t. -k5 -n | uniq | tail -3 || true
+          echo "latest published Fabric API builds for 1.21.11:"
+          curl -fsS https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml | grep -o '0\.[0-9.]*+1\.21\.11' | tail -3 || true
+
+      - name: Unit tests (logic module)
+        run: ./gradlew :logic:test --stacktrace
+
+      - name: Compile and package the mod
+        run: ./gradlew :mod:build --stacktrace
+
+      - name: Game tests on a dedicated server
+        run: ./gradlew :mod:runGametest --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            forgotten/logic/build/reports/tests
+            forgotten/mod/build/junit.xml
+            forgotten/mod/build/gametest/logs
+          if-no-files-found: ignore
+
+      - name: Upload mod jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: forgotten-mod
+          path: forgotten/mod/build/libs/*.jar
