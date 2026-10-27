@@ -117,11 +117,19 @@ public final class SiliconGameTests {
         BioNodes.install(cow, compiled.program().serialize());
         check(ctx, BioNodes.isNode(cow), "the cow is a Bio-Node");
         BlockPos chestPos = ctx.getAbsolutePos(new BlockPos(1, 1, 2));
-        ctx.addFinalTask(() -> {
+        // Bio-Nodes step every ten ticks: harvest, deposit, halt. Poll until all three happened.
+        boolean[] done = {false};
+        ctx.runAtEveryTick(() -> {
+            if (done[0]) {
+                return;
+            }
             ChestBlockEntity chest = (ChestBlockEntity) world.getBlockEntity(chestPos);
-            check(ctx, chest != null && chest.count(Items.WHEAT) >= 1, "wheat deposited in the chest");
-            check(ctx, world.getBlockState(ctx.getAbsolutePos(new BlockPos(3, 2, 2))).isOf(Blocks.WHEAT), "replanted");
-            check(ctx, cow.getAttached(ModAttachments.BIO_STATE).endsWith("true"), "the program halted");
+            String state = cow.getAttached(ModAttachments.BIO_STATE);
+            if (chest != null && chest.count(Items.WHEAT) >= 1 && state != null && state.endsWith("true")
+                    && world.getBlockState(ctx.getAbsolutePos(new BlockPos(3, 2, 2))).isOf(Blocks.WHEAT)) {
+                done[0] = true;
+                ctx.complete();
+            }
         });
     }
 

@@ -6,7 +6,8 @@ set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$(mktemp -d)"
 find "$HERE/mod/src" "$HERE/logic/src/main" -name '*.java' > "$OUT/sources.txt"
-javac -proc:none -Xmaxerrs 100000 -d "$OUT/classes" @"$OUT/sources.txt" > "$OUT/log.txt" 2>&1
+# javac writes a javac.<time>.args file to the working directory when it reports errors.
+(cd "$OUT" && javac -proc:none -Xmaxerrs 100000 -d "$OUT/classes" @"$OUT/sources.txt" > "$OUT/log.txt" 2>&1)
 grep -E "error: (reached end of file|illegal start|';' expected|'\)' expected|'\(' expected|<identifier> expected|class, interface, enum, or record expected|not a statement|unclosed|orphaned|'else' without 'if'|illegal character|'\{' expected|'\}' expected|: expected|-> expected|unexpected type|illegal start of type)" -A2 "$OUT/log.txt" > "$OUT/syntax.txt"
 if [ -s "$OUT/syntax.txt" ]; then
     cat "$OUT/syntax.txt"
