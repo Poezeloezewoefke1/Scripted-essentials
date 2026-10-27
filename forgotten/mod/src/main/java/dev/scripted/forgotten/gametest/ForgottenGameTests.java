@@ -112,7 +112,7 @@ public final class ForgottenGameTests {
     public void anchorsHoldIntegrity(TestContext ctx) {
         ServerWorld world = ctx.getWorld();
         BlockPos abs = ctx.getAbsolutePos(new BlockPos(2, 1, 2));
-        Reality.setIntegrity(world, abs, 20);
+        Reality.setIntegrity(world, abs, 30);
         check(ctx, Reality.stage(world, abs) == IntegrityStage.FRAGMENTATION, "stage from integrity");
         ctx.setBlockState(new BlockPos(2, 1, 2), ModBlocks.REALITY_ANCHOR);
         RegionMemory region = Reality.region(world);
