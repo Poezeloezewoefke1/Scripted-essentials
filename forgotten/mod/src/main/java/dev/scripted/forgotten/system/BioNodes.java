@@ -106,7 +106,7 @@ public final class BioNodes {
                 ? Texts.glitch("Compiled. It never stops. It is not supposed to stop.")
                 : Texts.discovery("Compiled " + program.size() + " lines."));
         Reality.insight(player, Insight.PROGRAM_COMPILED);
-        Reality.count(world, ChronicleEvent.PROGRAM_COMPILED, program.tightLoop() ? "infinite_loop" : "cartridge");
+        Reality.count(world, ChronicleEvent.ITEM_CRAFTED, program.tightLoop() ? "infinite_loop" : "cartridge");
         if (program.tightLoop()) {
             Reality.advance(player, "infinite_loop");
         }

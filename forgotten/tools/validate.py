@@ -172,6 +172,38 @@ def check_java(yarn_dir, fabric_dir):
                     err(f'{os.path.relpath(path)}: import {name} not in Fabric API source')
 
 
+LOGIC = os.path.join(HERE, '..', 'logic', 'src', 'main', 'java')
+
+
+def check_own_symbols():
+    """References like Insight.FOO or BioNodes.bar( to the project's own classes must name
+    something that class's source declares. Catches the compile errors no stub-free local
+    build can: a missing enum constant, a renamed helper."""
+    sources = {}
+    for root in JAVA + [LOGIC]:
+        for path in glob.glob(os.path.join(root, '**', '*.java'), recursive=True):
+            name = os.path.basename(path)[:-5]
+            pkg = os.path.relpath(os.path.dirname(path), root).replace(os.sep, '.')
+            sources.setdefault(name, []).append((pkg + '.' + name, open(path).read()))
+    tokens = {n: set(re.findall(r'\b\w+\b', v[0][1])) for n, v in sources.items() if len(v) == 1}
+    fq = {n: v[0][0] for n, v in sources.items() if len(v) == 1}
+    for root in JAVA:
+        for path in glob.glob(os.path.join(root, '**', '*.java'), recursive=True):
+            src = open(path).read()
+            pkg = os.path.relpath(os.path.dirname(path), root).replace(os.sep, '.')
+            imported = set(re.findall(r'^import ([\w.]+);', src, re.M))
+            body = re.sub(r'"(?:\\.|[^"\\])*"', '""', src)
+            body = re.sub(r'//[^\n]*|/\*.*?\*/', '', body, flags=re.S)
+            for m in re.finditer(r'(?<![\w.])([A-Z]\w*)\.([a-zA-Z_]\w*)\b', body):
+                cls, member = m.group(1), m.group(2)
+                if cls not in fq or member in ('class', 'values', 'valueOf'):
+                    continue
+                visible = fq[cls] in imported or fq[cls].rsplit('.', 1)[0] == pkg or re.search(
+                    r'\b' + re.escape(fq[cls]) + r'\b', src)
+                if visible and member not in tokens[cls]:
+                    err(f'{os.path.relpath(path)}: {cls}.{member} is not declared in {fq[cls]}')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--vanilla', required=True)
@@ -184,6 +216,7 @@ def main():
     check_data(items, blocks, set(vanilla['item']))
     if args.yarn or args.fabric:
         check_java(args.yarn, args.fabric)
+    check_own_symbols()
     for e in errors:
         print('ERROR', e)
     print(f'{len(items)} items, {len(blocks)} blocks checked; {len(errors)} problem(s)')
