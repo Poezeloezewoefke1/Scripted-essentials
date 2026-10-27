@@ -15,6 +15,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 import textures as T  # noqa: E402
 
+HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(os.path.dirname(__file__), '..', 'mod', 'src', 'main', 'resources')
 NS = 'forgotten'
 ASSETS = os.path.join(ROOT, 'assets', NS)
@@ -159,6 +160,12 @@ BLOCKS = {
                            model='cube_bottom_top', top=lambda: T.circuit(120, '#1a1e24', '#39ff6a'),
                            side=lambda: T.rune_block(121, '#2b2f3a', '#39ff6a'), bottom=lambda: T.noise_block(122, '#2b2f3a'),
                            loot='self', tools=['pickaxe']),
+    'frame_anchor': dict(name='Frame Anchor', desc='Use to step one depth down into a copy of the world where time runs faster. Crouch-use inside a depth to climb back.',
+                         model='cube_bottom_top', top=lambda: T.rune_block(123, '#2a1a10', '#ffb347'),
+                         side=lambda: T.rune_block(124, '#3a2614', '#d88a3a'), bottom=lambda: T.noise_block(125, '#2a1a10'),
+                         loot='self', tools=['pickaxe'], level='iron'),
+    'rift': dict(name='Rift', desc='Where an Infinite Loop fell through the world.',
+                 model='cube', all=lambda: T.static(126, '#05000a', '#5b2d8a'), loot='none', tools=[]),
 }
 
 # --------------------------------------------------------------------------- recipes
@@ -184,6 +191,8 @@ SHAPED = {
                                       'S': 'minecraft:stick'}, 1),
     'crash_core': (['EUE', 'UNU', 'EUE'], {'E': 'forgotten:entropy_shard', 'U': 'forgotten:unwritten_fragment',
                                           'N': 'minecraft:nether_star'}, 1),
+    'frame_anchor': (['OFO', 'FEF', 'OFO'], {'O': 'minecraft:crying_obsidian', 'F': 'minecraft:item_frame',
+                                              'E': 'minecraft:ender_eye'}, 1),
     'undefined_sword': (['N', 'N', 'S'], {'N': 'forgotten:null_shard', 'S': 'minecraft:netherite_ingot'}, 1),
     'nan_chestplate': (['N N', 'NIN', 'NNN'], {'N': 'forgotten:null_shard', 'I': 'minecraft:netherite_ingot'}, 1),
 }
@@ -251,6 +260,12 @@ ADVANCEMENTS = {
     'rank_5': ('Paradox Lord', 'Reach Architect rank 5.', 'forgotten:singularity', 'rank_4'),
     'infinite_loop': ('while (true)', 'Compile a program that never lets time pass.', 'forgotten:infinite_loop', 'something_is_wrong'),
     'the_crash': ('Segmentation Fault', 'Unmake a region with the Crash.', 'forgotten:crash_core', 'something_is_wrong'),
+    'the_backside': ('The Other Side of the Floor', 'Fall through forgotten ground into the Backside.', 'forgotten:null_block', 'something_is_wrong'),
+    'the_stack': ('Stack Overflow', 'Open a rift with an Infinite Loop and enter the Stack.', 'forgotten:data_block', 'infinite_loop'),
+    'the_underdream': ('Beneath the Sleep', 'Sleep through a thunderstorm and wake in the Underdream.', 'forgotten:marrowglass', 'something_is_wrong'),
+    'the_first_world': ('Before Anything Happened', 'Remember the First World.', 'forgotten:memory_of_the_first_world', 'first_world_fragment'),
+    'depth': ('Matryoshka', 'Step through a Frame Anchor into a copy of the world.', 'forgotten:frame_anchor', 'something_is_wrong'),
+    'scratch_layer': ('The Scratch Layer', 'Reach the deepest copy, where generation has given up.', 'minecraft:tinted_glass', 'depth'),
 }
 
 LANG_EXTRA = {
@@ -268,6 +283,87 @@ LANG_EXTRA = {
     'item.forgotten.rule_scroll.sky_water.desc': 'Use on a lake. It rises into a floating sphere, fish and all.',
 }
 
+
+# --------------------------------------------------------------------------- dimensions
+# Each dimension is a different way reality can exist. Types derive from the vanilla 1.21.11
+# templates in tools/templates (environment attributes and timelines); generators are vanilla.
+
+def _floor_rule(floor, below):
+    return {'type': 'minecraft:sequence', 'sequence': [
+        {'type': 'minecraft:condition',
+         'if_true': {'type': 'minecraft:stone_depth', 'add_surface_depth': False, 'offset': 0,
+                     'secondary_depth_range': 0, 'surface_type': 'floor'},
+         'then_run': {'type': 'minecraft:block', 'result_state': {'Name': floor}}},
+        {'type': 'minecraft:block', 'result_state': {'Name': below}}]}
+
+
+def _islands(floor, below):
+    with open(os.path.join(HERE, 'templates', 'floating_islands.json')) as f:
+        settings = json.load(f)
+    settings['default_block'] = {'Name': below}
+    settings['default_fluid'] = {'Name': 'minecraft:air'}
+    settings['surface_rule'] = _floor_rule(floor, below)
+    settings['ore_veins_enabled'] = False
+    return settings
+
+
+def _dim_type(template, colors=None, **overrides):
+    with open(os.path.join(HERE, 'templates', f'dimension_type_{template}.json')) as f:
+        t = json.load(f)
+    for key, value in (colors or {}).items():
+        t['attributes'][f'minecraft:visual/{key}'] = value
+    t.update(overrides)
+    t.pop('skybox', None)
+    return t
+
+
+def _bed_dream(t):
+    # In the Underdream a bed is the way out: sleeping is always allowed and never sets a spawn.
+    t['attributes']['minecraft:gameplay/bed_rule'] = {'can_set_spawn': 'never', 'can_sleep': 'always',
+                                                      'error_message': {'translate': 'block.minecraft.bed.no_sleep'}}
+    return t
+
+
+OVERWORLD_GEN = {'type': 'minecraft:noise', 'biome_source': {'type': 'minecraft:multi_noise', 'preset': 'minecraft:overworld'},
+                 'settings': 'minecraft:overworld'}
+
+
+def _void(biome='minecraft:the_void'):
+    return {'type': 'minecraft:flat', 'settings': {'biome': biome, 'features': False, 'lakes': False,
+                                                    'layers': [{'block': 'minecraft:air', 'height': 1}],
+                                                    'structure_overrides': []}}
+
+
+NOISE_SETTINGS = {
+    'stack': lambda: _islands('forgotten:data_block', 'forgotten:memory_block'),
+    'underdream': lambda: _islands('forgotten:marrowglass', 'minecraft:calcite'),
+}
+
+DIMENSIONS = {
+    # The Overworld seen from behind: the same terrain, under an inverted sky.
+    'backside': (lambda: _dim_type('overworld', {'sky_color': '#875800', 'fog_color': '#3f2700', 'cloud_color': '#33000000'},
+                                   ambient_light=0.05), lambda: OVERWORLD_GEN),
+    # White nothing. Platforms exist where someone remembers them.
+    'unwritten': (lambda: _dim_type('the_end', {'sky_color': '#ffffff', 'fog_color': '#f4f4f4'}, ambient_light=1.0),
+                  _void),
+    # The Stack Overflow: floating islands of memory under a black sky.
+    'stack': (lambda: _dim_type('the_end', {'sky_color': '#000000', 'fog_color': '#06140a'}, ambient_light=0.4),
+              lambda: {'type': 'minecraft:noise', 'biome_source': {'type': 'minecraft:fixed', 'biome': 'minecraft:the_void'},
+                       'settings': 'forgotten:stack'}),
+    # The Archive: a white room the size of everything that happened.
+    'archive': (lambda: _dim_type('the_end', {'sky_color': '#ffffff', 'fog_color': '#ffffff'}, ambient_light=1.0), _void),
+    # The Underdream: bone-white islands beneath the world's sleep.
+    'underdream': (lambda: _bed_dream(_dim_type('the_end', {'sky_color': '#1a1033', 'fog_color': '#2a1f4a'}, ambient_light=0.15)),
+                   lambda: {'type': 'minecraft:noise', 'biome_source': {'type': 'minecraft:fixed', 'biome': 'minecraft:the_void'},
+                            'settings': 'forgotten:underdream'}),
+    # The First World: the same seed, before anything happened to it.
+    'first_world': (lambda: _dim_type('overworld', {'sky_color': '#9ec8ff', 'fog_color': '#e8f0ff'}), lambda: OVERWORLD_GEN),
+}
+for _n in range(1, 6):
+    _grey = 0xc0 - 0x14 * _n
+    DIMENSIONS[f'depth_{_n}'] = (
+        (lambda g=_grey: _dim_type('overworld', {'fog_color': f'#{g:02x}{g:02x}{min(255, g + 0x18):02x}'})),
+        lambda: OVERWORLD_GEN)
 
 # =========================================================================== writers
 
@@ -334,8 +430,14 @@ def silk():
 def main():
     for sub in ('textures', 'models', 'blockstates', 'items'):
         shutil.rmtree(os.path.join(ASSETS, sub), ignore_errors=True)
-    for sub in ('recipe', 'loot_table', 'forgotten_paradox', 'advancement'):
+    for sub in ('recipe', 'loot_table', 'forgotten_paradox', 'advancement', 'dimension', 'dimension_type', 'worldgen'):
         shutil.rmtree(os.path.join(DATA, sub), ignore_errors=True)
+
+    for name, settings in NOISE_SETTINGS.items():
+        write_json(f'{DATA}/worldgen/noise_settings/{name}.json', settings())
+    for name, (dim_type, generator) in DIMENSIONS.items():
+        write_json(f'{DATA}/dimension_type/{name}.json', dim_type())
+        write_json(f'{DATA}/dimension/{name}.json', {'type': f'{NS}:{name}', 'generator': generator()})
 
     lang = dict(LANG_EXTRA)
 

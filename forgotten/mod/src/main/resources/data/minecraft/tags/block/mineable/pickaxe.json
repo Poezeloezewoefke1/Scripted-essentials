@@ -13,6 +13,7 @@
     "forgotten:singularity",
     "forgotten:data_block",
     "forgotten:memory_block",
-    "forgotten:compiler_chest"
+    "forgotten:compiler_chest",
+    "forgotten:frame_anchor"
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.the_stack.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.the_stack.description"
+    },
+    "icon": {
+      "id": "forgotten:data_block"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:infinite_loop"
+}

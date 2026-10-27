@@ -57,6 +57,8 @@ public final class PlayerMemory {
     public long lastSpoke = Long.MIN_VALUE / 2;
     /** Where the player last slept. */
     public long bed = Long.MIN_VALUE;
+    /** Where to go back to from a rift dimension (the Stack, the Underdream, the First World): "dim|x|y|z". */
+    public String returnPoint = "";
 
     public PlayerMemory() {
         this(new Journal(), new ObserverMind());
@@ -182,6 +184,7 @@ public final class PlayerMemory {
         nbt.putInt("deaths", deaths);
         nbt.putLong("lastSpoke", lastSpoke);
         nbt.putLong("bed", bed);
+        nbt.putString("returnPoint", returnPoint);
         return nbt;
     }
 
@@ -237,6 +240,7 @@ public final class PlayerMemory {
         m.deaths = nbt.getInt("deaths", 0);
         m.lastSpoke = nbt.getLong("lastSpoke", Long.MIN_VALUE / 2);
         m.bed = nbt.getLong("bed", Long.MIN_VALUE);
+        m.returnPoint = nbt.getString("returnPoint", "");
         return m;
     }
 

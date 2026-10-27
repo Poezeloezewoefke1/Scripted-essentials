@@ -80,6 +80,9 @@ public final class Hooks {
                 if (state.getBlock() instanceof DoorBlock && Anomalies.doorElsewhere(server, sp, hit.getBlockPos())) {
                     return ActionResult.SUCCESS;
                 }
+                if (state.getBlock() instanceof net.minecraft.block.BedBlock && Rifts.useBedInBackside(sp)) {
+                    return ActionResult.SUCCESS;
+                }
             }
             return ActionResult.PASS;
         });
@@ -129,6 +132,7 @@ public final class Hooks {
             BioNodes.clear();
             Unraveling.clear();
             SunDogs.clear();
+            Rifts.clear();
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ForgottenCommand.register(dispatcher));
     }
@@ -270,6 +274,9 @@ public final class Hooks {
         Reality.chronicle(world, ChronicleEvent.SLEPT, bed, player.getName().getString(), "");
         PlayerMemory memory = Reality.player(player);
         memory.bed = bed.asLong();
+        if (Rifts.dreamDown(player)) {
+            return;
+        }
         if (memory.hollowCursed) {
             memory.hollowCursed = false;
             Texts.tell(player, Texts.world("You wake, and your hands remember how to hold things."));

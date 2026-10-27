@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "forgotten:block/frame_anchor_top",
+    "side": "forgotten:block/frame_anchor_side",
+    "bottom": "forgotten:block/frame_anchor_bottom"
+  }
+}

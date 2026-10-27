@@ -2,7 +2,9 @@ package dev.scripted.forgotten.registry;
 
 import dev.scripted.forgotten.Forgotten;
 import dev.scripted.forgotten.block.CompilerChestBlock;
+import dev.scripted.forgotten.block.FrameAnchorBlock;
 import dev.scripted.forgotten.block.IndexedBlock;
+import dev.scripted.forgotten.block.RiftBlock;
 import dev.scripted.forgotten.block.MarrowglassBlock;
 import dev.scripted.forgotten.block.NullBlock;
 import dev.scripted.forgotten.block.ParadoxEngineBlock;
@@ -83,6 +85,12 @@ public final class ModBlocks {
     public static final Block COMPILER_CHEST = block("compiler_chest", CompilerChestBlock::new,
             AbstractBlock.Settings.create().mapColor(MapColor.GRAY).strength(3f, 6f).requiresTool()
                     .luminance(s -> 3).sounds(BlockSoundGroup.COPPER));
+    public static final Block FRAME_ANCHOR = block("frame_anchor", FrameAnchorBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.TERRACOTTA_BROWN).strength(5f, 1200f).requiresTool()
+                    .luminance(s -> 6).sounds(BlockSoundGroup.LODESTONE).pistonBehavior(PistonBehavior.BLOCK));
+    public static final Block RIFT = block("rift", RiftBlock::new,
+            AbstractBlock.Settings.create().mapColor(MapColor.BLACK).strength(-1f, 3600000f).noCollision().dropsNothing()
+                    .luminance(s -> 12).pistonBehavior(PistonBehavior.BLOCK), false);
 
     private ModBlocks() {
     }

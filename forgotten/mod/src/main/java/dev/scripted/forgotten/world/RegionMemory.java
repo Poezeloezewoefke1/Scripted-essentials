@@ -242,6 +242,8 @@ public final class RegionMemory extends PersistentState {
         public int slept;
         public boolean grudge;
         public boolean memorial;
+        /** In a nested depth: whether this chunk's copy errors have been applied. */
+        public boolean copied;
         public long lastAnomaly;
     }
 
@@ -264,6 +266,7 @@ public final class RegionMemory extends PersistentState {
             c.putInt("sl", r.slept);
             c.putBoolean("g", r.grudge);
             c.putBoolean("m", r.memorial);
+            c.putBoolean("c", r.copied);
             list.add(c);
         }
         nbt.put("chunks", list);
@@ -314,6 +317,7 @@ public final class RegionMemory extends PersistentState {
             r.slept = c.getInt("sl", 0);
             r.grudge = c.getBoolean("g", false);
             r.memorial = c.getBoolean("m", false);
+            r.copied = c.getBoolean("c", false);
             m.chunks.put(c.getLong("k", 0), r);
         }
         for (NbtElement el : nbt.getListOrEmpty("anchors")) {

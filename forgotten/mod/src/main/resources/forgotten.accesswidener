@@ -30,3 +30,5 @@ accessible field net/minecraft/entity/mob/MobEntity targetSelector Lnet/minecraf
 accessible field net/minecraft/entity/mob/CreeperEntity explosionRadius I
 accessible field net/minecraft/block/entity/AbstractFurnaceBlockEntity litTimeRemaining I
 accessible field net/minecraft/block/entity/AbstractFurnaceBlockEntity litTotalTime I
+accessible field net/minecraft/entity/mob/CreeperEntity currentFuseTime I
+accessible field net/minecraft/entity/mob/CreeperEntity fuseTime I

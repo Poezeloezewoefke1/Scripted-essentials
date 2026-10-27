@@ -36,6 +36,10 @@ public final class Directors {
         SunDogs.tick(now);
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             Hooks.trail(player);
+            Rifts.tickPlayer(player, now);
+        }
+        for (ServerWorld world : server.getWorlds()) {
+            Nesting.dilate(world);
         }
         if (now % 10 == 0) {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
@@ -76,6 +80,9 @@ public final class Directors {
     static void perPlayer(ServerPlayerEntity player, long now) {
         PlayerMemory memory = Reality.player(player);
         ServerWorld world = Reality.world(player);
+        Rifts.stackGravity(player);
+        Rifts.checkLoops(world, player);
+        Nesting.copyErrors(world, player);
         Puppets.applyHollowCurse(player);
         memory.debt = CausalDebt.afterTime(memory.debt, memory.lastEdit, now, 20);
         if (now % 600 == 0) {

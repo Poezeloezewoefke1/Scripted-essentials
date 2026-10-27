@@ -39,6 +39,12 @@ public class NullBlock extends Block {
             item.discard();
             return;
         }
+        if (entity instanceof net.minecraft.server.network.ServerPlayerEntity sp && world.getTime() % 60 == 0
+                && dev.scripted.forgotten.Reality.stage((ServerWorld) world, pos)
+                        .atLeast(dev.scripted.forgotten.logic.integrity.IntegrityStage.AMNESIA)
+                && dev.scripted.forgotten.system.Rifts.fallThrough(sp)) {
+            return;
+        }
         if (entity instanceof PlayerEntity player && !player.isCreative() && world.getTime() % 20 == 0) {
             var inv = player.getInventory();
             int size = inv.size();

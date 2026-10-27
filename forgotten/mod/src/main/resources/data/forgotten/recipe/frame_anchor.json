@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "OFO",
+    "FEF",
+    "OFO"
+  ],
+  "key": {
+    "O": "minecraft:crying_obsidian",
+    "F": "minecraft:item_frame",
+    "E": "minecraft:ender_eye"
+  },
+  "result": {
+    "id": "forgotten:frame_anchor",
+    "count": 1
+  }
+}

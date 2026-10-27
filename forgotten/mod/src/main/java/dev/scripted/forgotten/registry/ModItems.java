@@ -7,6 +7,7 @@ import dev.scripted.forgotten.item.CodexItem;
 import dev.scripted.forgotten.item.CrashCoreItem;
 import dev.scripted.forgotten.item.DnaStrandItem;
 import dev.scripted.forgotten.item.EditorItem;
+import dev.scripted.forgotten.item.FirstWorldMemoryItem;
 import dev.scripted.forgotten.item.GitResetItem;
 import dev.scripted.forgotten.item.GlitchGrenadeItem;
 import dev.scripted.forgotten.item.UndefinedSwordItem;
@@ -60,7 +61,7 @@ public final class ModItems {
     public static final Item PARADOX_FRAGMENT = item("paradox_fragment", s -> new LoreItem(s, true), new Item.Settings().rarity(Rarity.UNCOMMON));
     public static final Item UNREMEMBERED_THING = item("unremembered_thing", LoreItem::new, new Item.Settings());
     public static final Item UNWRITTEN_FRAGMENT = item("unwritten_fragment", s -> new LoreItem(s, true), new Item.Settings().rarity(Rarity.EPIC));
-    public static final Item MEMORY_FRAGMENT_FIRST_WORLD = item("memory_of_the_first_world", s -> new LoreItem(s, true),
+    public static final Item MEMORY_FRAGMENT_FIRST_WORLD = item("memory_of_the_first_world", FirstWorldMemoryItem::new,
             new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
 
     // ---- the Mender and the Unmaker ----

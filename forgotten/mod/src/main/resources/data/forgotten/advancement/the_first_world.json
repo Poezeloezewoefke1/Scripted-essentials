@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.the_first_world.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.the_first_world.description"
+    },
+    "icon": {
+      "id": "forgotten:memory_of_the_first_world"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:first_world_fragment"
+}

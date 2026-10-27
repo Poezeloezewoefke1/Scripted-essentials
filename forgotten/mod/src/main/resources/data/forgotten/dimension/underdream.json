@@ -1,0 +1,11 @@
+{
+  "type": "forgotten:underdream",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "minecraft:the_void"
+    },
+    "settings": "forgotten:underdream"
+  }
+}
