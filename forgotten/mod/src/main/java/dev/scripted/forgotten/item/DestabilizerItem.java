@@ -33,6 +33,8 @@ public class DestabilizerItem extends LoreItem {
         }
         BlockPos pos = context.getBlockPos();
         Reality.paradox(world, pos, 15);
+        dev.scripted.forgotten.system.Bosses.error(world, net.minecraft.util.math.Vec3d.ofCenter(pos),
+                dev.scripted.forgotten.logic.boss.StackDepth.ErrorKind.DESTABILIZE);
         Reality.debt(player, 2);
         Block.dropStack(world, pos.up(), new ItemStack(ModItems.ENTROPY_SHARD, 1 + world.getRandom().nextInt(2)));
         context.getStack().damage(1, player, context.getHand() == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);

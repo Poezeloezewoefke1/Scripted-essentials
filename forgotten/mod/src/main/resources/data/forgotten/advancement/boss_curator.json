@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.boss_curator.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.boss_curator.description"
+    },
+    "icon": {
+      "id": "forgotten:concept_memory"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:the_archive"
+}

@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.boss_king_of_yesterday.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.boss_king_of_yesterday.description"
+    },
+    "icon": {
+      "id": "minecraft:golden_helmet"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:something_is_wrong"
+}

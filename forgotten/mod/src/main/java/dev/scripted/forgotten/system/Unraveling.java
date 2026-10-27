@@ -86,13 +86,10 @@ public final class Unraveling {
             world.setBlockState(b, sa, Block.NOTIFY_LISTENERS | Block.FORCE_STATE);
         }
         // players' controls invert
-        long until = Reality.now(world.getServer()) + INVERT_TICKS;
         for (ServerPlayerEntity player : world.getEntitiesByClass(ServerPlayerEntity.class, new net.minecraft.util.math.Box(center).expand(4), p -> !p.isSpectator())) {
-            INVERTED.put(player.getUuid(), until);
-            LAST.put(player.getUuid(), player.getEntityPos());
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, INVERT_TICKS, 0));
-            Texts.bar(player, Texts.glitch("Your controls have been swapped with someone else's."));
+            invert(player, INVERT_TICKS);
         }
+        Bosses.error(world, at, dev.scripted.forgotten.logic.boss.StackDepth.ErrorKind.GLITCH_GRENADE);
         Reality.setIntegrity(world, center, Math.max(0, Reality.integrity(world, center) - 8));
         Reality.paradox(world, center, 2);
         Block.dropStack(world, center, new ItemStack(ModItems.ENTROPY_SHARD, 1 + random.nextInt(2)));
@@ -100,6 +97,14 @@ public final class Unraveling {
             Reality.count(world, ChronicleEvent.ANOMALY_WITNESSED, "glitch_grenade");
             Reality.debt(player, 3);
         }
+    }
+
+    /** Inverts a player's controls for a while. */
+    public static void invert(ServerPlayerEntity player, int ticks) {
+        INVERTED.put(player.getUuid(), Reality.now(Reality.world(player).getServer()) + ticks);
+        LAST.put(player.getUuid(), player.getEntityPos());
+        player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, ticks, 0));
+        Texts.bar(player, Texts.glitch("Your controls have been swapped with someone else's."));
     }
 
     /**
@@ -242,6 +247,12 @@ public final class Unraveling {
                     }
                 }
                 world.playSound(null, at, SoundEvents.ENTITY_WARDEN_SONIC_BOOM, SoundCategory.MASTER, 1.5f, 0.4f + r * 0.2f);
+                if (r == 2 && player.isAlive() && player.getEntityWorld() == world && new ChunkPos(player.getBlockPos()).equals(center)) {
+                    // Whoever stands at the centre when the region finishes unmaking is in the Null Layer.
+                    BlockPos top = world.getTopPosition(net.minecraft.world.Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, at.add(6, 0, 6));
+                    Bosses.summon(Bosses.Kind.COMPILER, world, top);
+                    Texts.tell(player, Texts.glitch("You are inside the Null Layer. Something here is still running."));
+                }
             });
         }
         Reality.debt(player, 60);

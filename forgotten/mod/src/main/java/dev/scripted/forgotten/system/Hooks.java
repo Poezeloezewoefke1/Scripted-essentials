@@ -83,12 +83,16 @@ public final class Hooks {
                 if (state.getBlock() instanceof net.minecraft.block.BedBlock && Rifts.useBedInBackside(sp)) {
                     return ActionResult.SUCCESS;
                 }
+                if (sp.getStackInHand(hand).isOf(ModItems.LENS) && Summons.lensOn(server, sp, hit.getBlockPos(), state)) {
+                    return ActionResult.SUCCESS;
+                }
             }
             return ActionResult.PASS;
         });
         ServerLivingEntityEvents.ALLOW_DEATH.register(Hooks::allowDeath);
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
-                SunDogs.allowDamage(entity, source, amount) && Hooks.notANumber(entity, source));
+                SunDogs.allowDamage(entity, source, amount) && Bosses.allowDamage(entity, source, amount)
+                        && Hooks.notANumber(entity, source));
         ServerLivingEntityEvents.AFTER_DEATH.register(Hooks::died);
         EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
             if (entity instanceof ServerPlayerEntity player) {
@@ -100,6 +104,8 @@ public final class Hooks {
             Puppets.adopt(entity);
             BioNodes.track(entity);
             SunDogs.adopt(entity);
+            Creatures.adopt(entity);
+            Bosses.adopt(entity);
             if (entity.getCommandTags().contains(dev.scripted.forgotten.util.Displays.TAG)
                     && !dev.scripted.forgotten.util.Displays.LIVE.contains(entity.getUuid())) {
                 // Displays are never meant to outlive the moment that made them.
@@ -110,6 +116,10 @@ public final class Hooks {
             Glitches.untrack(entity);
             BioNodes.untrack(entity);
             Unraveling.forgetChest(entity);
+            Creatures.untrack(entity);
+            if (entity.getRemovalReason() != Entity.RemovalReason.KILLED) {
+                Bosses.untrack(entity);
+            }
             if (entity instanceof ItemEntity item && entity.getRemovalReason() == Entity.RemovalReason.KILLED) {
                 ItemStack stack = item.getStack();
                 if (!stack.isEmpty() && (stack.getRarity().ordinal() > 0 || stack.hasEnchantments() || stack.getCount() >= 16)) {
@@ -119,6 +129,9 @@ public final class Hooks {
             }
         });
         ServerTickEvents.END_SERVER_TICK.register(Directors::tick);
+        net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, world, hand) ->
+                world instanceof ServerWorld server && player instanceof ServerPlayerEntity sp
+                        && Summons.useItem(server, sp, sp.getStackInHand(hand)) ? ActionResult.SUCCESS : ActionResult.PASS);
         DebtDirector.init();
         ServerLifecycleEvents.SERVER_STARTED.register(server -> Palimpsests.load());
         net.fabricmc.fabric.api.message.v1.ServerMessageEvents.CHAT_MESSAGE.register((message, sender, params) ->
@@ -133,6 +146,8 @@ public final class Hooks {
             Unraveling.clear();
             SunDogs.clear();
             Rifts.clear();
+            Creatures.clear();
+            Bosses.clear();
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ForgottenCommand.register(dispatcher));
     }
@@ -143,6 +158,9 @@ public final class Hooks {
         RegionMemory region = Reality.region(world);
         region.placed(pos);
         Reality.count(world, ChronicleEvent.BLOCK_PLACED, Registries.BLOCK.getId(state.getBlock()).toString());
+        Bosses.remember(world, Vec3d.ofCenter(pos), new dev.scripted.forgotten.logic.boss.ActionMemory.Action(
+                dev.scripted.forgotten.logic.boss.ActionMemory.Kind.BLOCK_PLACED, Registries.BLOCK.getId(state.getBlock()).toString(),
+                pos.getX(), pos.getY(), pos.getZ(), 1f));
         if (state.getBlock() instanceof SaplingBlock) {
             region.chunk(ChunkPos.toLong(pos)).saplingsPlanted++;
             region.markDirty();
@@ -227,6 +245,8 @@ public final class Hooks {
             return;
         }
         Puppets.onDeath(entity, source);
+        Creatures.died(entity, source);
+        Bosses.died(entity, source);
         BlockPos pos = entity.getBlockPos();
         if (!(entity instanceof ServerPlayerEntity)) {
             Unraveling.nullDrop(world, pos, true);

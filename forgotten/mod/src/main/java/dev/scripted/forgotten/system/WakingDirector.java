@@ -127,6 +127,11 @@ public final class WakingDirector {
             region.markDirty();
             Texts.tell(player, Texts.world("The forest is willing to forget."));
         }
+        if (r.grudge && world.isNight() && r.logsBroken >= CLEARCUT_LOGS * 3 && random.nextInt(200) == 0
+                && !Bosses.alive(Bosses.Kind.GARDENER)) {
+            BlockPos at = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, player.getBlockPos().add(12, 0, 12));
+            Bosses.summon(Bosses.Kind.GARDENER, world, at);
+        }
         if (r.grudge && world.isNight() && random.nextInt(40) == 0) {
             CreakingEntity thorn = EntityType.CREAKING.create(world, SpawnReason.EVENT);
             BlockPos at = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,

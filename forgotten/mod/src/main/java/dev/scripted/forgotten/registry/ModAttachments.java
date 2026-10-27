@@ -50,6 +50,14 @@ public final class ModAttachments {
     public static final AttachmentType<Boolean> PROVOKED = AttachmentRegistry.create(Forgotten.id("provoked"),
             b -> b.persistent(Codec.BOOL));
 
+    /** A boss body: which boss it is (see Bosses.Kind). */
+    public static final AttachmentType<String> BOSS = AttachmentRegistry.create(Forgotten.id("boss"),
+            b -> b.persistent(Codec.STRING));
+
+    /** A Recursion Spider's generation, or -1 for a spider that was checked and is ordinary. */
+    public static final AttachmentType<Integer> RECURSION = AttachmentRegistry.create(Forgotten.id("recursion"),
+            b -> b.persistent(Codec.INT));
+
     /** Marks a Mannequin the mod is puppeteering: "kind;owner-uuid". */
     public static final AttachmentType<String> PUPPET = AttachmentRegistry.create(Forgotten.id("puppet"),
             b -> b.persistent(Codec.STRING));

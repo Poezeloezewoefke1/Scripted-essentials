@@ -161,7 +161,20 @@ public final class Nesting {
         switch (memory.symptom()) {
             case ECHO_STEPS -> Texts.tell(player, Texts.world("You hear your own footsteps, a little late."));
             case MIRRORED_BLOCKS -> Texts.tell(player, Texts.warn("The layers are slipping. Things you build appear in the layer above, backwards."));
-            case UNWRAPPER -> Texts.tell(player, Texts.glitch("Something has noticed how deep you are. It is coming to open the first frame."));
+            case UNWRAPPER -> {
+                Texts.tell(player, Texts.glitch("Something has noticed how deep you are. It is coming to open the first frame."));
+                WorldMemory frames = Reality.memory(player.getEntityWorld().getServer());
+                frames.frames.values().stream().min(java.util.Comparator.comparingInt(WorldMemory.FrameRecord::id)).ifPresent(first -> {
+                    var key = net.minecraft.registry.RegistryKey.of(net.minecraft.registry.RegistryKeys.WORLD,
+                            net.minecraft.util.Identifier.of(first.dimension()));
+                    ServerWorld home = player.getEntityWorld().getServer().getWorld(key);
+                    if (home != null) {
+                        BlockPos anchor = BlockPos.fromLong(first.pos());
+                        BlockPos at = home.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, anchor.add(24, 0, 0));
+                        Bosses.summon(Bosses.Kind.UNWRAPPER, home, at);
+                    }
+                });
+            }
             default -> {
             }
         }

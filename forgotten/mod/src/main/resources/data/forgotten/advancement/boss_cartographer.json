@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "title": {
+      "translate": "advancements.forgotten.boss_cartographer.title"
+    },
+    "description": {
+      "translate": "advancements.forgotten.boss_cartographer.description"
+    },
+    "icon": {
+      "id": "minecraft:filled_map"
+    },
+    "frame": "task"
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "forgotten:something_is_wrong"
+}

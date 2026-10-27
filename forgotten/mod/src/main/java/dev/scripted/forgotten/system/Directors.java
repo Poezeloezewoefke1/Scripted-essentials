@@ -34,6 +34,8 @@ public final class Directors {
         BioNodes.tick(now);
         Unraveling.tick(server, now);
         SunDogs.tick(now);
+        Creatures.tick(now);
+        Bosses.tick(server, now);
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             Hooks.trail(player);
             Rifts.tickPlayer(player, now);
@@ -63,6 +65,7 @@ public final class Directors {
                     DebtDirector.tick(world, player, now);
                     Draft.roll(world, player);
                     SunDogs.roll(world, player);
+                    Creatures.roll(world, player, now);
                 }
                 Anomalies.thaw(world, now);
             }

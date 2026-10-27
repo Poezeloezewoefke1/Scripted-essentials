@@ -93,6 +93,8 @@ public final class ModItems {
     public static final Item GLITCH_GRENADE = item("glitch_grenade", GlitchGrenadeItem::new, new Item.Settings().maxCount(16));
     public static final Item EDITOR = item("editor", EditorItem::new, new Item.Settings().maxDamage(96).rarity(Rarity.UNCOMMON));
     public static final Item CRASH_CORE = item("crash_core", CrashCoreItem::new, new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
+    /** What is left of the Compiler: the world's source, which the Genesis Interface reads. */
+    public static final Item SOURCE_CODE = item("source_code", s -> new LoreItem(s, true), new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
     public static final Item NULL_SHARD = item("null_shard", s -> new LoreItem(s, true), new Item.Settings().rarity(Rarity.RARE));
     /** NaN protection: the chestplate's defense is not a number. Its effect is in Hooks. */
     public static final ArmorMaterial NAN_MATERIAL = new ArmorMaterial(37,

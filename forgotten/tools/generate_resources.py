@@ -99,6 +99,8 @@ ITEMS = {
                lambda: T.stick_tool(31, '#ffe066', head_shape='needle')),
     'crash_core': ('Crash Core', 'Set it into ground already at Fragmentation. Unmakes a five-by-five chunk region, permanently.',
                    lambda: T.orb(32, '#ff2a6a', glyph=32)),
+    'source_code': ('Source Code', 'What is left of the Compiler: the world\'s own source. The Genesis Interface can read it.',
+                    lambda: T.book(36, '#0a1f0e', page='#39ff6a')),
     'null_shard': ('Null Shard', 'A Null Material. It exists, but it should not. Found only where integrity is zero.',
                    lambda: T.shard(33, '#120018')),
     'undefined_sword': ('Undefined Sword', 'Deals undefined damage: somewhere between nothing and far too much.',
@@ -265,6 +267,14 @@ ADVANCEMENTS = {
     'the_underdream': ('Beneath the Sleep', 'Sleep through a thunderstorm and wake in the Underdream.', 'forgotten:marrowglass', 'something_is_wrong'),
     'the_first_world': ('Before Anything Happened', 'Remember the First World.', 'forgotten:memory_of_the_first_world', 'first_world_fragment'),
     'depth': ('Matryoshka', 'Step through a Frame Anchor into a copy of the world.', 'forgotten:frame_anchor', 'something_is_wrong'),
+    'the_archive': ('Everything That Happened', 'Hold a Lens to a written book on a lectern and enter the Archive.', 'minecraft:lectern', 'lens'),
+    'boss_recursion_queen': ('Base Case', 'Defeat the Recursion Queen.', 'forgotten:concept_recursion', 'something_is_wrong'),
+    'boss_king_of_yesterday': ('No Second Chances', 'Defeat the King of Yesterday without repeating yourself.', 'minecraft:golden_helmet', 'something_is_wrong'),
+    'boss_gardener': ('Replanted', 'Defeat the Gardener.', 'minecraft:oak_sapling', 'something_is_wrong'),
+    'boss_cartographer': ('Terra Incognita', 'Defeat the Cartographer.', 'minecraft:filled_map', 'something_is_wrong'),
+    'boss_compiler': ('Fatal Exception', 'Crash the Compiler three times.', 'forgotten:source_code', 'the_crash'),
+    'boss_curator': ('Deaccessioned', 'Defeat the Curator in the Archive.', 'forgotten:concept_memory', 'the_archive'),
+    'boss_unwrapper': ('Heavy Enough', 'Feed the Unwrapper until it cannot move.', 'forgotten:frame_anchor', 'depth'),
     'scratch_layer': ('The Scratch Layer', 'Reach the deepest copy, where generation has given up.', 'minecraft:tinted_glass', 'depth'),
 }
 
